@@ -34,3 +34,15 @@
 .btnSecundario:hover {
   background: #f7f7f7;
 }
+
+@media (max-width: 768px) {
+  .accionesTop {
+    width: 100%;
+  }
+
+  .btnVerPublica,
+  .btnSecundario {
+    flex: 1;
+    justify-content: center;
+  }
+}

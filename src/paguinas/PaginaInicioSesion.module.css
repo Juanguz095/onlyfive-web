@@ -1,0 +1,32 @@
+.pagina {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.panelDerecho {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .pagina {
+    grid-template-columns: 1fr;
+  }
+
+  .panelDerecho {
+    border-left: none;
+    padding: 32px 24px;
+  }
+}

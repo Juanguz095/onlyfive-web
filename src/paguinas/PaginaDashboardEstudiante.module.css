@@ -1,0 +1,20 @@
+.cuerpo {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 64px);
+}
+
+.main {
+  padding: 32px 36px;
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .cuerpo {
+    grid-template-columns: 1fr;
+  }
+
+  .main {
+    padding: 20px 16px;
+  }
+}

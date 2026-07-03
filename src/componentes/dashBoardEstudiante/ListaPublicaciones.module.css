@@ -132,3 +132,20 @@
 .btnIcono:hover {
   background: #f0f0f0;
 }
+
+@media (max-width: 768px) {
+  .filaPublicacion {
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .accionesFila {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .miniatura {
+    width: 44px;
+    height: 44px;
+  }
+}

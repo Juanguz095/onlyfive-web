@@ -4,6 +4,7 @@ import TarjetasMetricas from '../componentes/dashBoardEstudiante/TarjetasMetrica
 import ListaPublicaciones from '../componentes/dashBoardEstudiante/ListaPublicaciones'
 import EncabezadoPortafolio from '../componentes/dashBoardEstudiante/EncabezadoPortafolio'
 import AccionesPortafolio from '../componentes/dashBoardEstudiante/AccionesPortafolio'
+import estilos from './PaginaDashboardEstudiante.module.css'
 
 const publicaciones = [
   {
@@ -35,14 +36,10 @@ const publicaciones = [
 export default function PaginaDashboardEstudiante() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <HeaderDashboard
-        migaActiva="Mi portafolio"
-        nombreUsuario="María García"
-        iniciales="MG"
-      />
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', minHeight: 'calc(100vh - 64px)' }}>
+      <HeaderDashboard migaActiva="Mi portafolio" nombreUsuario="María García" iniciales="MG" />
+      <div className={estilos.cuerpo}>
         <SidebarEstudiante />
-        <main style={{ padding: '32px 36px', background: '#fff' }}>
+        <main className={estilos.main}>
           <EncabezadoPortafolio />
           <TarjetasMetricas publicaciones={12} publicadas={9} borradores={2} visitas={248} />
           <ListaPublicaciones publicaciones={publicaciones} />

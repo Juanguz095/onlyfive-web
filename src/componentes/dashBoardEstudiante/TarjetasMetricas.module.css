@@ -6,7 +6,7 @@
 }
 
 .tarjetaMetrica {
-  background: #c0b9b9;
+  background: #f7f7f7;
   border-radius: 10px;
   padding: 16px 18px;
   display: flex;
@@ -16,7 +16,7 @@
 
 .metricaLabel {
   font-size: 12px;
-  color: #000000;
+  color: #999;
 }
 
 .metricaValor {
@@ -33,8 +33,12 @@
   color: #d97706;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .gridMetricas {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metricaValor {
+    font-size: 20px;
   }
 }

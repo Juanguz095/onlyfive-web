@@ -96,3 +96,21 @@
   color: #333;
   font-weight: 500;
 }
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .migas {
+    display: none;
+  }
+
+  .logoSub {
+    display: none;
+  }
+
+  .nombreUsuario {
+    display: none;
+  }
+}
