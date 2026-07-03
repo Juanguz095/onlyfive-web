@@ -1,0 +1,189 @@
+.footer {
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+}
+
+.gridPrincipal {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.columnaInstituto {
+  padding: 40px 36px 40px 32px;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.columna {
+  padding: 40px 28px;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.columna:last-child {
+  border-right: none;
+}
+
+.logoFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.logoNombre {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 0.01em;
+}
+
+.logoPrograma {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.descripcionInstituto {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+.contactoList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactoFila {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.columnaTitle {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.listaEnlaces {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.enlace {
+  font-size: 12px;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.enlace:hover {
+  color: #111;
+}
+
+.tablaHorarios {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filaHorario {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.horarioDia {
+  font-size: 11px;
+  color: #666;
+}
+
+.horarioHora {
+  font-size: 11px;
+  color: #111;
+  font-weight: 600;
+}
+
+.redesGrid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.redBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.redBtn:hover {
+  border-color: #111;
+  color: #111;
+  background: #f5f5f5;
+}
+
+.redTexto {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.6;
+  max-width: 200px;
+}
+
+.barraFinal {
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #aaa;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.politicas {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.politicas a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.politicas a:hover {
+  color: #555;
+}
+
+.sepPolitica {
+  color: #ddd;
+}

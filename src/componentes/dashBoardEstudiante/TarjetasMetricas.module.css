@@ -1,0 +1,40 @@
+.gridMetricas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.tarjetaMetrica {
+  background: #c0b9b9;
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metricaLabel {
+  font-size: 12px;
+  color: #000000;
+}
+
+.metricaValor {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+}
+
+.colorVerde {
+  color: #16a34a;
+}
+
+.colorAmbar {
+  color: #d97706;
+}
+
+@media (max-width: 900px) {
+  .gridMetricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

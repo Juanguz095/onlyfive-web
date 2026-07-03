@@ -1,0 +1,110 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campoGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.etiquetaFila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.etiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.01em;
+}
+
+.linkOlvide {
+  font-size: 11px;
+  color: #4361ee;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.linkOlvide:hover {
+  opacity: 0.75;
+}
+
+.campo {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #111;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+
+.campo::placeholder {
+  color: #bbb;
+}
+
+.campo:focus {
+  border-color: #4361ee;
+  background: #fff;
+}
+
+.campoContrasenia {
+  position: relative;
+}
+
+.campoContrasenia .campo {
+  padding-right: 42px;
+}
+
+.btnMostrar {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.btnMostrar:hover {
+  color: #555;
+}
+
+.btnIngresar {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: #4361ee;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, opacity 0.15s;
+  margin-top: 4px;
+}
+
+.btnIngresar:hover:not(:disabled) {
+  background: #3451d1;
+}
+
+.btnCargando {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

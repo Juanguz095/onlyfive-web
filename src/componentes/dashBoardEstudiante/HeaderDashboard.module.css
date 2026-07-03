@@ -1,0 +1,98 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
+}
+
+.logoBloque {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logoNombre {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.logoSub {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.migas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.migaInactiva {
+  color: #999;
+}
+
+.migaSep {
+  color: #ccc;
+}
+
+.migaActiva {
+  color: #111;
+  font-weight: 600;
+}
+
+.headerAcciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnCampana {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4361ee;
+  cursor: pointer;
+}
+
+.perfilChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4361ee;
+}
+
+.nombreUsuario {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}

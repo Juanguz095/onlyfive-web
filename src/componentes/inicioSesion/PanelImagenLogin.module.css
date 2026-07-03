@@ -1,0 +1,70 @@
+.panelIzquierdo {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.imagenFondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imagenOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.2) 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  z-index: 1;
+}
+
+.contenidoPanel {
+  position: relative;
+  z-index: 2;
+  padding: 40px 44px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logoBloque {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logoNombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.logoSub {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.cita {
+  padding-bottom: 8px;
+}
+
+.citaTexto {
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}

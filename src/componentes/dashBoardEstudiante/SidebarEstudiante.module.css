@@ -1,0 +1,97 @@
+.sidebar {
+  background: #fafafa;
+  border-right: 1px solid #e8e8e8;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bloqueMenu {
+  padding: 0 16px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.labelSidebar {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #999;
+}
+
+.navSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemMenu {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #555;
+  border-radius: 8px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.itemMenu:hover {
+  background: #f0f0f0;
+}
+
+.itemActivo {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  color: #111;
+  font-weight: 600;
+}
+
+.badgeNotif {
+  margin-left: auto;
+  font-size: 10px;
+  background: #4361ee;
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-weight: 600;
+}
+
+.bloqueAcciones {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnNuevaPublicacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #4361ee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btnNuevaPublicacion:hover {
+  background: #3451d1;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+}

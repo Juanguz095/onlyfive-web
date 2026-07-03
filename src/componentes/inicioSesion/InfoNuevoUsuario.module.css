@@ -1,0 +1,21 @@
+.rolBloque {
+  background: #f7f7f7;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rolTexto {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.rolDescripcion {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.6;
+}
