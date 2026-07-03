@@ -78,3 +78,18 @@
   background: #111;
   color: #fff;
 }
+@media (max-width: 768px) {
+  .contenidoHero {
+    grid-template-columns: 1fr;
+  }
+
+  .imagenContenedor {
+    height: 240px;
+    border-right: none;
+    border-bottom: 1px solid #000;
+  }
+
+  .textoHero {
+    padding: 32px 20px;
+  }
+}

@@ -117,3 +117,17 @@
 .puntoActivo {
   background: #111;
 }
+@media (max-width: 768px) {
+  .gridCarrusel {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta {
+    border-right: none;
+    border-bottom: 1px solid #000;
+  }
+
+  .tarjeta:last-of-type {
+    border-bottom: none;
+  }
+}

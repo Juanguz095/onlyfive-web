@@ -32,3 +32,17 @@
 .btnIniciar:hover {
   background: #3451d1;
 }
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 15px;
+  }
+
+  .btnIniciar {
+    padding: 7px 14px;
+    font-size: 11px;
+  }
+}

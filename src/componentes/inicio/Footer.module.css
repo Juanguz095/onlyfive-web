@@ -187,3 +187,30 @@
 .sepPolitica {
   color: #ddd;
 }
+@media (max-width: 768px) {
+  .gridPrincipal {
+    grid-template-columns: 1fr;
+  }
+
+  .columnaInstituto {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 28px 20px;
+  }
+
+  .columna {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 24px 20px;
+  }
+
+  .columna:last-child {
+    border-bottom: none;
+  }
+
+  .barraFinal {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 20px;
+  }
+}

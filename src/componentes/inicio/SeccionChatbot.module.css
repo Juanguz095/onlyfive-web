@@ -219,3 +219,26 @@
 .btnEnviar:hover {
   background: #3451d1;
 }
+@media (max-width: 768px) {
+  .seccion {
+    grid-template-columns: 1fr;
+  }
+
+  .bannerLateral {
+    padding: 32px 20px;
+    min-height: 200px;
+  }
+
+  .chatbotBloque {
+    border-left: none;
+    border-top: 1px solid #000;
+  }
+
+  .encabezadoBloque {
+    padding: 20px 16px 16px;
+  }
+
+  .chatCard {
+    margin: 16px;
+  }
+}
