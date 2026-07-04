@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "publicacions",
+  "info": {
+    "singularName": "publicacion",
+    "pluralName": "publicacions",
+    "displayName": "Publicacion"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "richtext"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "borrador",
+        "publicado",
+        "archivado"
+      ],
+      "default": "borrador"
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "ciclo": {
+      "type": "enumeration",
+      "enum": [
+        "CICLO I",
+        "CICLO II",
+        "CICLO III",
+        "CICLO IV",
+        "CICLO V",
+        "CICLO VI"
+      ]
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "PROYECTOS",
+        "TALLERES",
+        "EVENTOS"
+      ],
+      "default": "PROYECTOS"
+    },
+    "taller": {
+      "type": "string"
+    },
+    "docente": {
+      "type": "string"
+    },
+    "fecha_publicacion": {
+      "type": "datetime"
+    },
+    "autor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "portafolios": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::portafolio.portafolio",
+      "mappedBy": "publicaciones"
+    }
+  }
+}

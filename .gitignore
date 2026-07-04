@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.npm-cache/
+.strapi-installer/
+backend/node_modules/
+backend/.cache/
+backend/build/
+backend/dist/
+backend/.env

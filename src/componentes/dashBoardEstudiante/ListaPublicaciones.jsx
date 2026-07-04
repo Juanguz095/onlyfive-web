@@ -7,8 +7,8 @@ export default function ListaPublicaciones({ publicaciones }) {
 
   const publicacionesFiltradas = publicaciones.filter((p) => {
     if (filtroActivo === 'Todas') return true
-    if (filtroActivo === 'Publicadas') return p.estado === 'Publicada'
-    if (filtroActivo === 'Borradores') return p.estado === 'Borrador'
+    if (filtroActivo === 'Publicadas') return p.estado === 'publicado'
+    if (filtroActivo === 'Borradores') return p.estado === 'borrador'
     return true
   })
 
@@ -32,20 +32,20 @@ export default function ListaPublicaciones({ publicaciones }) {
       <div className={estilos.listaPublicaciones}>
         {publicacionesFiltradas.map((p, i) => (
           <div
-            key={i}
-            className={`${estilos.filaPublicacion} ${p.estado === 'Borrador' ? estilos.filaBorrador : ''}`}
+            key={p.id || i}
+            className={`${estilos.filaPublicacion} ${p.estado === 'borrador' ? estilos.filaBorrador : ''}`}
           >
             <div className={estilos.miniatura} />
             <div className={estilos.infoPublicacion}>
               <div className={estilos.tituloPublicacion}>{p.titulo}</div>
               <div className={estilos.metaPublicacion}>
-                <span className={p.estado === 'Publicada' ? estilos.badgePublicada : estilos.badgeBorrador}>
+                <span className={p.estado === 'publicado' ? estilos.badgePublicada : estilos.badgeBorrador}>
                   {p.estado}
                 </span>
+                <span className={estilos.metaTexto}>{p.categoria}</span>
                 <span className={estilos.metaTexto}>
-                  {p.categoria} · {p.nivel} · {p.tiempo}
+                  {p.fecha_publicacion ? new Date(p.fecha_publicacion).toLocaleDateString('es-PE') : 'Sin fecha'}
                 </span>
-                <span className={estilos.metaTexto}>· {p.visitas}</span>
               </div>
             </div>
             <div className={estilos.accionesFila}>
@@ -58,6 +58,7 @@ export default function ListaPublicaciones({ publicaciones }) {
             </div>
           </div>
         ))}
+        {publicacionesFiltradas.length === 0 && <p>No hay publicaciones para mostrar.</p>}
       </div>
     </div>
   )
