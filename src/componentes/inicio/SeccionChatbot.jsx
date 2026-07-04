@@ -3,31 +3,62 @@ import { Send, ChevronRight, Bot } from 'lucide-react'
 import estilos from './SeccionChatbot.module.css'
 
 const respuestasRapidas = [
-  'Información de la carrera',
-  'Próximas actividades',
-  'Requisitos de admisión',
+  'Informacion de la carrera',
+  'Proximas actividades',
+  'Requisitos de admision',
   'Horarios y talleres',
 ]
 
 export default function SeccionChatbot() {
   const [mensajeInput, setMensajeInput] = useState('')
+  const [conversacionId, setConversacionId] = useState(() => localStorage.getItem('conversacionChatId'))
+  const [cargando, setCargando] = useState(false)
   const [mensajes, setMensajes] = useState([
     {
       tipo: 'bot',
-      texto: '¡Hola! Soy ChefBot IA, tu asistente virtual del Programa de Cocina. ¿En qué puedo ayudarte hoy?',
+      texto: 'Hola! Soy ChefBot IA, tu asistente virtual del Programa de Cocina. En que puedo ayudarte hoy?',
     },
   ])
 
-  const enviarMensaje = (texto) => {
-    if (!texto.trim()) return
-    setMensajes((prev) => [...prev, { tipo: 'usuario', texto }])
+  const enviarMensaje = async (texto) => {
+    const consulta = texto.trim()
+    if (!consulta || cargando) return
+
+    setMensajes((prev) => [...prev, { tipo: 'usuario', texto: consulta }])
     setMensajeInput('')
-    setTimeout(() => {
+    setCargando(true)
+
+    try {
+      const respuesta = await fetch('http://localhost:1337/api/chatbot/responder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          texto: consulta,
+          conversacionId,
+        }),
+      })
+      const datos = await respuesta.json()
+
+      if (!respuesta.ok) {
+        throw new Error('No se pudo responder')
+      }
+
+      if (datos.conversacionId) {
+        setConversacionId(datos.conversacionId)
+        localStorage.setItem('conversacionChatId', datos.conversacionId)
+      }
+
+      setMensajes((prev) => [...prev, datos.mensaje])
+    } catch {
       setMensajes((prev) => [
         ...prev,
-        { tipo: 'bot', texto: 'Gracias por tu consulta. Un momento, estoy buscando la información para ti...' },
+        { tipo: 'bot', texto: 'No pude conectarme con el asistente. Verifica que Strapi este iniciado.' },
       ])
-    }, 800)
+    } finally {
+      setCargando(false)
+    }
   }
 
   return (
@@ -36,7 +67,7 @@ export default function SeccionChatbot() {
         <h2 className={estilos.bannerTitulo}>
           FORMAMOS TALENTO, CREAMOS EXPERIENCIAS
         </h2>
-        <button className={estilos.bannerBtn}>CONOCE MÁS</button>
+        <button className={estilos.bannerBtn}>CONOCE MAS</button>
       </div>
 
       <div className={estilos.chatbotBloque}>
@@ -52,7 +83,7 @@ export default function SeccionChatbot() {
             <div>
               <div className={estilos.chatNombre}>ChefBot IA</div>
               <div className={estilos.chatEstado}>
-                <span className={estilos.puntoverde} /> En línea
+                <span className={estilos.puntoverde} /> En linea
               </div>
             </div>
           </div>
@@ -60,7 +91,7 @@ export default function SeccionChatbot() {
           <div className={estilos.chatMensajes}>
             {mensajes.map((m, i) => (
               <div
-                key={i}
+                key={`${m.tipo}-${i}`}
                 className={m.tipo === 'bot' ? estilos.burbujabBot : estilos.burbujaUsuario}
               >
                 {m.texto}
@@ -74,6 +105,7 @@ export default function SeccionChatbot() {
                     key={r}
                     className={estilos.chipRespuesta}
                     onClick={() => enviarMensaje(r)}
+                    disabled={cargando}
                   >
                     <span>{r}</span>
                     <ChevronRight size={13} color="#aaa" />
@@ -91,11 +123,13 @@ export default function SeccionChatbot() {
               onChange={(e) => setMensajeInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && enviarMensaje(mensajeInput)}
               className={estilos.inputTexto}
+              disabled={cargando}
             />
             <button
               className={estilos.btnEnviar}
               onClick={() => enviarMensaje(mensajeInput)}
               aria-label="Enviar"
+              disabled={cargando}
             >
               <Send size={15} color="#fff" />
             </button>

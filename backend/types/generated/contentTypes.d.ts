@@ -362,6 +362,77 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiConversacionChatConversacionChat
+  extends Schema.CollectionType {
+  collectionName: 'conversacion_chats';
+  info: {
+    displayName: 'Conversacion Chat';
+    pluralName: 'conversacion-chats';
+    singularName: 'conversacion-chat';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::conversacion-chat.conversacion-chat',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    identificador: Attribute.String & Attribute.Required & Attribute.Unique;
+    mensajes: Attribute.Relation<
+      'api::conversacion-chat.conversacion-chat',
+      'oneToMany',
+      'api::mensaje-chat.mensaje-chat'
+    >;
+    nombre_visitante: Attribute.String;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::conversacion-chat.conversacion-chat',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiMensajeChatMensajeChat extends Schema.CollectionType {
+  collectionName: 'mensaje_chats';
+  info: {
+    displayName: 'Mensaje Chat';
+    pluralName: 'mensaje-chats';
+    singularName: 'mensaje-chat';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    conversacion: Attribute.Relation<
+      'api::mensaje-chat.mensaje-chat',
+      'manyToOne',
+      'api::conversacion-chat.conversacion-chat'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::mensaje-chat.mensaje-chat',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    emisor: Attribute.Enumeration<['usuario', 'bot']> & Attribute.Required;
+    texto: Attribute.Text & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::mensaje-chat.mensaje-chat',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPortafolioPortafolio extends Schema.CollectionType {
   collectionName: 'portafolios';
   info: {
@@ -891,6 +962,8 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::conversacion-chat.conversacion-chat': ApiConversacionChatConversacionChat;
+      'api::mensaje-chat.mensaje-chat': ApiMensajeChatMensajeChat;
       'api::portafolio.portafolio': ApiPortafolioPortafolio;
       'api::publicacion.publicacion': ApiPublicacionPublicacion;
       'plugin::content-releases.release': PluginContentReleasesRelease;
