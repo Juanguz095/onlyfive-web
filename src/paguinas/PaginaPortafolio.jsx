@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import HeaderDashboard from '../componentes/dashBoardEstudiante/HeaderDashboard'
 import SidebarEstudiante from '../componentes/dashBoardEstudiante/SidebarEstudiante'
-import TarjetasMetricas from '../componentes/dashBoardEstudiante/TarjetasMetricas'
-import ListaPublicaciones from '../componentes/dashBoardEstudiante/ListaPublicaciones'
-import EncabezadoPortafolio from '../componentes/dashBoardEstudiante/EncabezadoPortafolio'
 import estilos from './PaginaDashboardEstudiante.module.css'
 
 const normalizarPublicacion = (publicacion) => ({
@@ -25,18 +22,18 @@ const obtenerIniciales = (nombre) => (
     .toUpperCase()
 )
 
-export default function PaginaDashboardEstudiante() {
+export default function PaginaPortafolio() {
   const [publicaciones, setPublicaciones] = useState([])
   const [usuario, setUsuario] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const cargarPublicaciones = async () => {
+    const cargarPortafolio = async () => {
       const jwt = localStorage.getItem('jwt')
 
       if (!jwt) {
-        setError('Error al cargar publicaciones')
+        setError('Error al cargar portafolio')
         setCargando(false)
         return
       }
@@ -55,7 +52,7 @@ export default function PaginaDashboardEstudiante() {
 
         setUsuario(usuario)
 
-        const respuesta = await fetch(`http://localhost:1337/api/publicacions?filters[autor][id][$eq]=${usuario.id}&populate=*`, {
+        const respuesta = await fetch(`http://localhost:1337/api/portafolios?filters[estudiante][id][$eq]=${usuario.id}&populate=publicaciones`, {
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
@@ -63,36 +60,56 @@ export default function PaginaDashboardEstudiante() {
         const datos = await respuesta.json()
 
         if (!respuesta.ok) {
-          throw new Error('No se pudieron cargar las publicaciones')
+          throw new Error('No se pudo cargar el portafolio')
         }
 
-        setPublicaciones((datos.data || []).map(normalizarPublicacion))
+        const portafolio = datos.data?.[0]
+        const publicacionesPortafolio = portafolio?.attributes?.publicaciones?.data || []
+        setPublicaciones(publicacionesPortafolio.map(normalizarPublicacion))
       } catch {
-        setError('Error al cargar publicaciones')
+        setError('Error al cargar portafolio')
       } finally {
         setCargando(false)
       }
     }
 
-    cargarPublicaciones()
+    cargarPortafolio()
   }, [])
 
   const nombreUsuario = obtenerNombreUsuario(usuario)
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      <HeaderDashboard migaActiva="Mi portafolio" nombreUsuario={nombreUsuario} iniciales={obtenerIniciales(nombreUsuario)} />
+      <HeaderDashboard migaActiva="Portafolio" nombreUsuario={nombreUsuario} iniciales={obtenerIniciales(nombreUsuario)} />
       <div className={estilos.cuerpo}>
         <SidebarEstudiante />
         <main className={estilos.main}>
-          <EncabezadoPortafolio titulo="Mi portafolio" labelPanel="Panel de estudiante" />
+          <h1 style={{ fontSize: '24px', color: '#111', marginBottom: '18px' }}>Portafolio</h1>
           {cargando && <p>Cargando...</p>}
           {error && <p>{error}</p>}
           {!cargando && !error && (
-            <>
-              <TarjetasMetricas publicaciones={publicaciones} />
-              <ListaPublicaciones publicaciones={publicaciones} />
-            </>
+            <ul style={{ display: 'grid', gap: '10px', padding: 0, listStyle: 'none' }}>
+              {publicaciones.map((publicacion) => (
+                <li
+                  key={publicacion.id}
+                  style={{
+                    padding: '14px',
+                    border: '1px solid #e8e8e8',
+                    borderRadius: '8px',
+                    background: '#f7f7f7',
+                  }}
+                >
+                  <strong>{publicacion.titulo}</strong>
+                  <div style={{ fontSize: '12px', color: '#777', marginTop: '6px' }}>
+                    {publicacion.estado} | {publicacion.categoria} |{' '}
+                    {publicacion.fecha_publicacion
+                      ? new Date(publicacion.fecha_publicacion).toLocaleDateString('es-PE')
+                      : 'Sin fecha'}
+                  </div>
+                </li>
+              ))}
+              {publicaciones.length === 0 && <li>No hay publicaciones en este portafolio.</li>}
+            </ul>
           )}
         </main>
       </div>

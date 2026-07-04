@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "portafolios",
+  "info": {
+    "singularName": "portafolio",
+    "pluralName": "portafolios",
+    "displayName": "Portafolio"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "slug_compartible": {
+      "type": "uid",
+      "targetField": "titulo"
+    },
+    "es_publico": {
+      "type": "boolean",
+      "default": false
+    },
+    "estudiante": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "publicaciones": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::publicacion.publicacion",
+      "inversedBy": "portafolios"
+    }
+  }
+}
