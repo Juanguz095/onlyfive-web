@@ -4,6 +4,7 @@ const accionesPorRol = {
   public: [
     'api::publicacion.publicacion.find',
     'api::publicacion.publicacion.findOne',
+    'api::chatbot.chatbot.responder',
   ],
   authenticated: [
     'api::publicacion.publicacion.find',
@@ -12,11 +13,16 @@ const accionesPorRol = {
     'api::portafolio.portafolio.find',
     'api::portafolio.portafolio.findOne',
     'api::portafolio.portafolio.create',
+    'api::chatbot.chatbot.responder',
   ],
 }
 
 const esPermisoDelProyecto = (accion) => (
-  accion.startsWith('api::publicacion.') || accion.startsWith('api::portafolio.')
+  accion.startsWith('api::publicacion.') ||
+  accion.startsWith('api::portafolio.') ||
+  accion.startsWith('api::chatbot.') ||
+  accion.startsWith('api::conversacion-chat.') ||
+  accion.startsWith('api::mensaje-chat.')
 )
 
 const configurarPermisos = async (strapi, tipoRol, accionesPermitidas) => {

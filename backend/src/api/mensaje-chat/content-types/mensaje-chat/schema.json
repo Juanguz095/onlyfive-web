@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mensaje_chats",
+  "info": {
+    "singularName": "mensaje-chat",
+    "pluralName": "mensaje-chats",
+    "displayName": "Mensaje Chat"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "texto": {
+      "type": "text",
+      "required": true
+    },
+    "emisor": {
+      "type": "enumeration",
+      "enum": [
+        "usuario",
+        "bot"
+      ],
+      "required": true
+    },
+    "conversacion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::conversacion-chat.conversacion-chat",
+      "inversedBy": "mensajes"
+    }
+  }
+}
