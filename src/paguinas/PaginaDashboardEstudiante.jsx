@@ -55,7 +55,7 @@ export default function PaginaDashboardEstudiante() {
 
         setUsuario(usuario)
 
-        const respuesta = await fetch(`http://localhost:1337/api/publicacions?filters[autor][id][$eq]=${usuario.id}&populate=*`, {
+        const respuesta = await fetch('http://localhost:1337/api/publicacions/mias', {
           headers: {
             Authorization: `Bearer ${jwt}`,
           },

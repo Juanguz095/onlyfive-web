@@ -3,6 +3,31 @@
 const { createCoreController } = require('@strapi/strapi').factories
 
 module.exports = createCoreController('api::publicacion.publicacion', ({ strapi }) => ({
+  async mias(ctx) {
+    if (!ctx.state.user) {
+      return ctx.unauthorized('Debes iniciar sesion')
+    }
+
+    const publicaciones = await strapi.entityService.findMany('api::publicacion.publicacion', {
+      filters: {
+        autor: {
+          id: ctx.state.user.id,
+        },
+      },
+      populate: '*',
+      sort: {
+        fecha_publicacion: 'desc',
+      },
+    })
+
+    ctx.body = {
+      data: publicaciones.map((publicacion) => ({
+        id: publicacion.id,
+        attributes: publicacion,
+      })),
+    }
+  },
+
   async create(ctx) {
     if (ctx.state.user) {
       ctx.request.body = {

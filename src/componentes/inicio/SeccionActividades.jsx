@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import estilos from './SeccionActividades.module.css'
 
-const ciclosDisponibles = ['TODOS', 'CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV', 'CICLO V', 'CICLO VI']
+const ciclosDisponibles = ['TODOS', 'CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV']
 const tiposDisponibles = ['TODOS', 'PROYECTOS', 'TALLERES', 'EVENTOS']
 const coloresFondo = ['#f0f4ff', '#fff7ed', '#f0fdf4', '#fef2f2']
 
