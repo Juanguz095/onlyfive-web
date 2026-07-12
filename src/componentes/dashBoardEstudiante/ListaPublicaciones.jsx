@@ -1,16 +1,22 @@
 import { useState } from 'react'
-import { Edit, GripVertical } from 'lucide-react'
+import { Edit, Eye } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import estilos from './ListaPublicaciones.module.css'
 
-export default function ListaPublicaciones({ publicaciones }) {
+export default function ListaPublicaciones({ publicaciones, onEditarPublicacion }) {
   const [filtroActivo, setFiltroActivo] = useState('Todas')
+  const navegar = useNavigate()
 
   const publicacionesFiltradas = publicaciones.filter((p) => {
     if (filtroActivo === 'Todas') return true
-    if (filtroActivo === 'Publicadas') return p.estado === 'Publicada'
-    if (filtroActivo === 'Borradores') return p.estado === 'Borrador'
+    if (filtroActivo === 'Publicadas') return p.estado === 'publicado'
+    if (filtroActivo === 'Borradores') return p.estado === 'borrador'
     return true
   })
+
+  const irADetalle = (publicacionId) => {
+    navegar(`/publicacion/${publicacionId}`)
+  }
 
   return (
     <div>
@@ -32,32 +38,39 @@ export default function ListaPublicaciones({ publicaciones }) {
       <div className={estilos.listaPublicaciones}>
         {publicacionesFiltradas.map((p, i) => (
           <div
-            key={i}
-            className={`${estilos.filaPublicacion} ${p.estado === 'Borrador' ? estilos.filaBorrador : ''}`}
+            key={p.id || i}
+            className={`${estilos.filaPublicacion} ${p.estado === 'borrador' ? estilos.filaBorrador : ''}`}
           >
             <div className={estilos.miniatura} />
             <div className={estilos.infoPublicacion}>
-              <div className={estilos.tituloPublicacion}>{p.titulo}</div>
+              <button className={estilos.btnTitulo} onClick={() => irADetalle(p.id)}>
+                {p.titulo}
+              </button>
               <div className={estilos.metaPublicacion}>
-                <span className={p.estado === 'Publicada' ? estilos.badgePublicada : estilos.badgeBorrador}>
+                <span className={p.estado === 'publicado' ? estilos.badgePublicada : estilos.badgeBorrador}>
                   {p.estado}
                 </span>
+                <span className={estilos.metaTexto}>{p.categoria}</span>
                 <span className={estilos.metaTexto}>
-                  {p.categoria} · {p.nivel} · {p.tiempo}
+                  {p.fecha_publicacion ? new Date(p.fecha_publicacion).toLocaleDateString('es-PE') : 'Sin fecha'}
                 </span>
-                <span className={estilos.metaTexto}>· {p.visitas}</span>
               </div>
             </div>
             <div className={estilos.accionesFila}>
-              <button className={estilos.btnIcono} aria-label="Editar">
+              <button
+                className={estilos.btnIcono}
+                aria-label="Editar"
+                onClick={() => onEditarPublicacion && onEditarPublicacion(p)}
+              >
                 <Edit size={14} />
               </button>
-              <button className={estilos.btnIcono} aria-label="Reordenar">
-                <GripVertical size={14} color="#aaa" />
+              <button className={estilos.btnIcono} aria-label="Ver publicación" onClick={() => irADetalle(p.id)}>
+                <Eye size={14} />
               </button>
             </div>
           </div>
         ))}
+        {publicacionesFiltradas.length === 0 && <p>No hay publicaciones para mostrar.</p>}
       </div>
     </div>
   )

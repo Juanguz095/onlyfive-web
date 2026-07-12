@@ -1,51 +1,75 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import estilos from './SeccionActividades.module.css'
 
-const proyectos = [
-  {
-    ciclo: 'Ciclo III',
-    tipoBadge: 'Proyecto final',
-    estadoBadge: 'Aprobado',
-    titulo: 'Menú degustación de 5 tiempos — cocina novoandina',
-    descripcion:
-      'Proyecto integrador del taller de cocina creativa. Incluye 5 recetas, memoria escrita y presentación fotográfica del proceso.',
-    taller: 'Cocina Creativa II',
-    docente: 'Prof. Melvin Nolazco',
-    estudiante: 'María García Quispe',
-    anio: '2026',
-    colorFondo: '#f0f4ff',
-  },
-  {
-    ciclo: 'Ciclo V',
-    tipoBadge: 'Proyecto final',
-    estadoBadge: 'Aprobado',
-    titulo: 'Repostería artesanal: técnicas de chocolate bean to bar',
-    descripcion:
-      'Investigación y práctica del proceso completo del cacao peruano hasta la tableta artesanal. Incluye recetario y análisis sensorial.',
-    taller: 'Repostería Avanzada',
-    docente: 'Prof. Melvin Nolazco',
-    estudiante: 'Carlos Mendoza Ríos',
-    anio: '2026',
-    colorFondo: '#fff7ed',
-  },
-  {
-    ciclo: 'Ciclo I',
-    tipoBadge: 'Trabajo práctico',
-    estadoBadge: 'Aprobado',
-    titulo: 'Ensaladas templadas y técnicas de corte básico',
-    descripcion:
-      'Primer trabajo práctico del ciclo. Documentación fotográfica de técnicas de corte juliana, brunoise y chiffonade aplicadas.',
-    taller: 'Cocina Básica I',
-    docente: 'Prof. Melvin Nolazco',
-    estudiante: 'Iker Gaitán Maldonado',
-    anio: '2026',
-    colorFondo: '#f0fdf4',
-  },
-]
+const ciclosDisponibles = ['TODOS', 'CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV']
+const tiposDisponibles = ['TODOS', 'PROYECTOS', 'TALLERES', 'EVENTOS']
+const coloresFondo = ['#f0f4ff', '#fff7ed', '#f0fdf4', '#fef2f2']
 
-const ciclosDisponibles = ['CICLO I', 'CICLO III', 'CICLO V']
-const tiposDisponibles = ['PROYECTOS', 'TALLERES', 'EVENTOS']
+const obtenerDescripcion = (descripcion) => {
+  if (!descripcion) return 'Publicacion del portafolio academico del estudiante.'
+  if (typeof descripcion === 'string') return descripcion
+  return 'Publicacion del portafolio academico del estudiante.'
+}
+
+const obtenerEstudiante = (autor) => (
+  autor?.data?.attributes?.username || autor?.data?.attributes?.email || 'Estudiante'
+)
+
+const normalizarProyecto = (publicacion, indice) => {
+  const atributos = publicacion.attributes || {}
+  const fecha = atributos.fecha_publicacion ? new Date(atributos.fecha_publicacion) : null
+
+  return {
+    id: publicacion.id,
+    ciclo: atributos.ciclo || 'CICLO I',
+    tipo: atributos.tipo || 'PROYECTOS',
+    tipoBadge: atributos.tipo === 'TALLERES' ? 'Trabajo practico' : 'Proyecto final',
+    estadoBadge: atributos.estado === 'publicado' ? 'Publicado' : atributos.estado,
+    titulo: atributos.titulo || 'Sin titulo',
+    descripcion: obtenerDescripcion(atributos.descripcion),
+    taller: atributos.taller || atributos.categoria || 'Sin taller',
+    docente: atributos.docente || 'Docente no asignado',
+    estudiante: obtenerEstudiante(atributos.autor),
+    anio: fecha ? String(fecha.getFullYear()) : 'Sin fecha',
+    colorFondo: coloresFondo[indice % coloresFondo.length],
+  }
+}
 
 export default function SeccionActividades() {
+  const [cicloSeleccionado, setCicloSeleccionado] = useState('TODOS')
+  const [tipoSeleccionado, setTipoSeleccionado] = useState('TODOS')
+  const [proyectos, setProyectos] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const cargarProyectos = async () => {
+      try {
+        const respuesta = await fetch('http://localhost:1337/api/publicacions?filters[estado][$eq]=publicado&populate=autor&sort=fecha_publicacion:desc')
+        const datos = await respuesta.json()
+
+        if (!respuesta.ok) {
+          throw new Error('No se pudieron cargar las actividades')
+        }
+
+        setProyectos((datos.data || []).map(normalizarProyecto))
+      } catch {
+        setError('Error al cargar actividades')
+      } finally {
+        setCargando(false)
+      }
+    }
+
+    cargarProyectos()
+  }, [])
+
+  const proyectosFiltrados = proyectos.filter((p) => {
+    const coincideCiclo = cicloSeleccionado === 'TODOS' || p.ciclo === cicloSeleccionado
+    const coincideTipo = tipoSeleccionado === 'TODOS' || p.tipo === tipoSeleccionado
+    return coincideCiclo && coincideTipo
+  })
+
   return (
     <section className={estilos.seccion}>
       <div className={estilos.encabezado}>
@@ -62,32 +86,43 @@ export default function SeccionActividades() {
 
           <div className={estilos.grupoFiltro}>
             <span className={estilos.labelFiltro}>CICLOS</span>
-            <div className={estilos.listaBadges}>
+            <select
+              className={estilos.selectFiltro}
+              value={cicloSeleccionado}
+              onChange={(e) => setCicloSeleccionado(e.target.value)}
+            >
               {ciclosDisponibles.map((c) => (
-                <button key={c} className={`${estilos.badgeFiltro} ${c === 'CICLO I' ? estilos.badgeActivo : ''}`}>
-                  {c}
-                </button>
+                <option key={c} value={c}>{c}</option>
               ))}
-            </div>
+            </select>
           </div>
 
           <div className={estilos.separador} />
 
           <div className={estilos.grupoFiltro}>
             <span className={estilos.labelFiltro}>TIPO</span>
-            <div className={estilos.listaBadges}>
+            <select
+              className={estilos.selectFiltro}
+              value={tipoSeleccionado}
+              onChange={(e) => setTipoSeleccionado(e.target.value)}
+            >
               {tiposDisponibles.map((t) => (
-                <button key={t} className={`${estilos.badgeFiltro} ${t === 'PROYECTOS' ? estilos.badgeActivo : ''}`}>
-                  {t}
-                </button>
+                <option key={t} value={t}>{t}</option>
               ))}
-            </div>
+            </select>
           </div>
         </aside>
 
         <div className={estilos.gridProyectos}>
-          {proyectos.map((p, i) => (
-            <div key={i} className={estilos.tarjeta}>
+          {cargando && <div className={estilos.sinResultados}>Cargando...</div>}
+          {error && <div className={estilos.sinResultados}>{error}</div>}
+          {!cargando && !error && proyectosFiltrados.length === 0 && (
+            <div className={estilos.sinResultados}>
+              No hay actividades para los filtros seleccionados.
+            </div>
+          )}
+          {!cargando && !error && proyectosFiltrados.map((p) => (
+            <div key={p.id} className={estilos.tarjeta}>
               <div className={estilos.tarjetaImagen} style={{ background: p.colorFondo }}>
                 <div className={estilos.badgeCiclo}>{p.ciclo}</div>
               </div>
@@ -102,9 +137,9 @@ export default function SeccionActividades() {
                   <div className={estilos.metaFila}><span className={estilos.metaLabel}>Taller</span><span className={estilos.metaValor}>{p.taller}</span></div>
                   <div className={estilos.metaFila}><span className={estilos.metaLabel}>Docente</span><span className={estilos.metaValor}>{p.docente}</span></div>
                   <div className={estilos.metaFila}><span className={estilos.metaLabel}>Estudiante</span><span className={`${estilos.metaValor} ${estilos.metaLink}`}>{p.estudiante}</span></div>
-                  <div className={estilos.metaFila}><span className={estilos.metaLabel}>Año</span><span className={estilos.metaValor}>{p.anio}</span></div>
+                  <div className={estilos.metaFila}><span className={estilos.metaLabel}>Anio</span><span className={estilos.metaValor}>{p.anio}</span></div>
                 </div>
-                <button className={estilos.btnVerProyecto}>Ver proyecto</button>
+                <Link className={estilos.btnVerProyecto} to={`/publicacion/${p.id}`}>Ver proyecto</Link>
               </div>
             </div>
           ))}

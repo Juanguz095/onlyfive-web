@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "conversacion_chats",
+  "info": {
+    "singularName": "conversacion-chat",
+    "pluralName": "conversacion-chats",
+    "displayName": "Conversacion Chat"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "identificador": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "nombre_visitante": {
+      "type": "string"
+    },
+    "mensajes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::mensaje-chat.mensaje-chat",
+      "mappedBy": "conversacion"
+    }
+  }
+}
