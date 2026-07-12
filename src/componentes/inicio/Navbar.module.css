@@ -10,10 +10,9 @@
 
 .logo {
   font-size: 20px;
-  font-weight: 500;
   color: #111;
   letter-spacing: 0.01em;
-  font-weight: bolder;
+  font-weight: 800;
 }
 
 .btnIniciar {
@@ -32,6 +31,34 @@
 .btnIniciar:hover {
   background: #3451d1;
 }
+
+.btnUsuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  letter-spacing: normal;
+}
+
+.avatarUsuario {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nombreUsuario {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 768px) {
   .nav {
     padding: 0 16px;
@@ -44,5 +71,9 @@
   .btnIniciar {
     padding: 7px 14px;
     font-size: 11px;
+  }
+
+  .nombreUsuario {
+    max-width: 110px;
   }
 }

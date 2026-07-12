@@ -10,6 +10,7 @@ const accionesPorRol = {
     'api::publicacion.publicacion.find',
     'api::publicacion.publicacion.findOne',
     'api::publicacion.publicacion.create',
+    'api::publicacion.publicacion.mias',
     'api::portafolio.portafolio.find',
     'api::portafolio.portafolio.findOne',
     'api::portafolio.portafolio.create',

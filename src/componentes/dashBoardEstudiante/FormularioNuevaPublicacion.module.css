@@ -1,0 +1,95 @@
+.contenedor {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  background: #fcfcfc;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 18px;
+  color: #111;
+}
+
+.btnCerrar {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.formulario {
+  display: grid;
+  gap: 12px;
+}
+
+.grupoCampo {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: #555;
+}
+
+.campo {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 11px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.areaTexto {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.gridCampos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btnPrincipal {
+  border: none;
+  background: #4361ee;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnPrincipal:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.error {
+  margin: 0;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .gridCampos {
+    grid-template-columns: 1fr;
+  }
+}
