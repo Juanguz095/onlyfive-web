@@ -82,7 +82,7 @@ export default function PaginaPortafolio() {
     <div style={{ minHeight: '100vh', background: '#fff' }}>
       <HeaderDashboard migaActiva="Portafolio" nombreUsuario={nombreUsuario} iniciales={obtenerIniciales(nombreUsuario)} />
       <div className={estilos.cuerpo}>
-        <SidebarEstudiante />
+        <SidebarEstudiante vistaActiva="portafolio" />
         <main className={estilos.main}>
           <h1 style={{ fontSize: '24px', color: '#111', marginBottom: '18px' }}>Portafolio</h1>
           {cargando && <p>Cargando...</p>}

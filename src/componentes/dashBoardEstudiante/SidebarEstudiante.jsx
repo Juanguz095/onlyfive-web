@@ -2,8 +2,17 @@ import { useNavigate } from 'react-router-dom'
 import { Home, MessageCircle, LayoutGrid, Video, Bell, Plus } from 'lucide-react'
 import estilos from './SidebarEstudiante.module.css'
 
-export default function SidebarEstudiante() {
+export default function SidebarEstudiante({ vistaActiva = 'dashboard', onNuevaPublicacion }) {
   const navegar = useNavigate()
+
+  const manejarNuevaPublicacion = () => {
+    if (onNuevaPublicacion) {
+      onNuevaPublicacion()
+      return
+    }
+
+    navegar('/dashboard?nueva=1')
+  }
 
   return (
     <aside className={estilos.sidebar}>
@@ -18,9 +27,17 @@ export default function SidebarEstudiante() {
             <MessageCircle size={16} />
             <span>Foro académico</span>
           </button>
-          <button className={`${estilos.itemMenu} ${estilos.itemActivo}`}>
-            <LayoutGrid size={16} color="#4361ee" />
+          <button
+            className={`${estilos.itemMenu} ${vistaActiva === 'dashboard' ? estilos.itemActivo : ''}`}
+            onClick={() => navegar('/dashboard')}
+          >
+            <LayoutGrid size={16} color={vistaActiva === 'dashboard' ? '#4361ee' : '#666'} />
             <span>Mi portafolio</span>
+          </button>
+          <button
+            className={`${estilos.itemMenu} ${vistaActiva === 'portafolio' ? estilos.itemActivo : ''}`}
+            onClick={() => navegar('/portafolio')}
+          >
           </button>
           <button className={estilos.itemMenu}>
             <Video size={16} />
@@ -36,7 +53,7 @@ export default function SidebarEstudiante() {
 
       <div className={estilos.bloqueAcciones}>
         <span className={estilos.labelSidebar}>ACCIONES</span>
-        <button className={estilos.btnNuevaPublicacion}>
+        <button className={estilos.btnNuevaPublicacion} onClick={manejarNuevaPublicacion}>
           <Plus size={15} />
           <span>Nueva publicación</span>
         </button>

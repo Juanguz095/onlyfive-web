@@ -30,10 +30,18 @@ module.exports = createCoreController('api::publicacion.publicacion', ({ strapi 
 
   async create(ctx) {
     if (ctx.state.user) {
-      ctx.request.body = {
-        ...ctx.request.body,
+      const requestBody = ctx.request?.['body'] && typeof ctx.request['body'] === 'object'
+        ? ctx.request['body']
+        : {}
+
+      const dataBody = requestBody.data && typeof requestBody.data === 'object'
+        ? requestBody.data
+        : {}
+
+      ctx.request['body'] = {
+        ...requestBody,
         data: {
-          ...(ctx.request.body.data || {}),
+          ...dataBody,
           autor: ctx.state.user.id,
         },
       }
@@ -42,17 +50,70 @@ module.exports = createCoreController('api::publicacion.publicacion', ({ strapi 
     return super.create(ctx)
   },
 
+  async update(ctx) {
+    if (!ctx.state.user) {
+      return ctx.unauthorized('Debes iniciar sesion')
+    }
+
+    const publicacionId = Number(ctx.params.id)
+
+    if (Number.isNaN(publicacionId)) {
+      return ctx.badRequest('Id de publicacion invalido')
+    }
+
+    const existente = await strapi.entityService.findOne('api::publicacion.publicacion', publicacionId, {
+      populate: {
+        autor: true,
+      },
+    })
+
+    if (!existente) {
+      return ctx.notFound('No se encontro la publicacion solicitada')
+    }
+
+    const autorId = typeof existente.autor === 'object' && existente.autor
+      ? existente.autor.id
+      : existente.autor
+
+    if (autorId && autorId !== ctx.state.user.id) {
+      return ctx.forbidden('No tienes permisos para editar esta publicacion')
+    }
+
+    const requestBody = ctx.request?.['body'] && typeof ctx.request['body'] === 'object'
+      ? ctx.request['body']
+      : {}
+
+    const dataBody = requestBody.data && typeof requestBody.data === 'object'
+      ? requestBody.data
+      : {}
+
+    ctx.request['body'] = {
+      ...requestBody,
+      data: {
+        ...dataBody,
+        autor: ctx.state.user.id,
+      },
+    }
+
+    return super.update(ctx)
+  },
+
   async find(ctx) {
     if (!ctx.state.user) {
-      ctx.query = {
-        ...ctx.query,
-        filters: {
-          ...(ctx.query.filters || {}),
-          estado: {
-            $eq: 'publicado',
-          },
+      const queryActual = /** @type {any} */ (ctx.query || {})
+      const filtrosActuales = queryActual.filters && typeof queryActual.filters === 'object' && !Array.isArray(queryActual.filters)
+        ? queryActual.filters
+        : {}
+
+      const nuevoQuery = /** @type {any} */ ({ ...queryActual })
+      nuevoQuery.filters = {
+        ...filtrosActuales,
+        estado: {
+          $eq: 'publicado',
         },
       }
+
+      ctx.query = nuevoQuery
     }
 
     return super.find(ctx)

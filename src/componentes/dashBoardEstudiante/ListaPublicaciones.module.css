@@ -78,6 +78,23 @@
   color: #111;
 }
 
+.btnTitulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.btnTitulo:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
 .metaPublicacion {
   display: flex;
   align-items: center;

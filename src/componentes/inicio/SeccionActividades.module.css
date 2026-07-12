@@ -254,6 +254,8 @@
   cursor: pointer;
   transition: background 0.15s;
   letter-spacing: 0.02em;
+  text-decoration: none;
+  text-align: center;
 }
 
 .btnVerProyecto:hover {

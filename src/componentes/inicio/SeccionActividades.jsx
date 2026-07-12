@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import estilos from './SeccionActividades.module.css'
 
 const ciclosDisponibles = ['TODOS', 'CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV']
@@ -138,7 +139,7 @@ export default function SeccionActividades() {
                   <div className={estilos.metaFila}><span className={estilos.metaLabel}>Estudiante</span><span className={`${estilos.metaValor} ${estilos.metaLink}`}>{p.estudiante}</span></div>
                   <div className={estilos.metaFila}><span className={estilos.metaLabel}>Anio</span><span className={estilos.metaValor}>{p.anio}</span></div>
                 </div>
-                <a className={estilos.btnVerProyecto} href={`/login?publicacion=${p.id}`}>Ver proyecto</a>
+                <Link className={estilos.btnVerProyecto} to={`/publicacion/${p.id}`}>Ver proyecto</Link>
               </div>
             </div>
           ))}
