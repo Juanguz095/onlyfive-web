@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reacciones",
+  "info": {
+    "singularName": "reaccion",
+    "pluralName": "reacciones",
+    "displayName": "Reaccion"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "like",
+        "love",
+        "celebration",
+        "idea"
+      ],
+      "required": true
+    },
+    "usuario": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "articulo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::articulo.articulo"
+    }
+  }
+}

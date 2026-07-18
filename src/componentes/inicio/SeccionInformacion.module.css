@@ -1,0 +1,164 @@
+.bloque {
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
+}
+
+.encabezadoBloque {
+  padding: 30px 32px 18px;
+}
+
+.titulo {
+  font-size: clamp(24px, 4.2vw, 46px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #111;
+  line-height: 1.05;
+}
+
+.gridSobrePrograma {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  padding: 10px 32px 28px;
+}
+
+.imagenPrograma {
+  width: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #e5e5e5;
+}
+
+.contenidoPrograma {
+  padding: 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.parrafoPrograma {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.75;
+}
+
+.botonOutline {
+  align-self: flex-start;
+  padding: 9px 14px;
+  border: 1px solid #4361ee;
+  color: #4361ee;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 9px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.botonOutline:hover {
+  background: #4361ee;
+  color: #fff;
+}
+
+.gridTestimonios {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 8px 32px 32px;
+}
+
+.tarjetaTestimonio {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.tarjetaTestimonio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(17, 24, 39, 0.1);
+}
+
+.comillas {
+  font-size: 30px;
+  line-height: 1;
+  color: #4361ee;
+  font-weight: 700;
+  margin-bottom: -4px;
+}
+
+.cita {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.75;
+  font-style: italic;
+  min-height: 90px;
+}
+
+.footerTestimonio {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid #e8edf5;
+  padding-top: 12px;
+}
+
+.avatarTestimonio {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #4361ee;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nombreTestimonio {
+  font-size: 13px;
+  color: #111;
+  font-weight: 700;
+}
+
+.rolTestimonio {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .encabezadoBloque {
+    padding: 24px 16px 12px;
+  }
+
+  .gridSobrePrograma {
+    grid-template-columns: 1fr;
+    padding: 6px 16px 18px;
+  }
+
+  .imagenPrograma {
+    min-height: 220px;
+  }
+
+  .gridTestimonios {
+    grid-template-columns: 1fr;
+    padding: 6px 16px 20px;
+    gap: 12px;
+  }
+
+  .cita {
+    min-height: 0;
+  }
+}

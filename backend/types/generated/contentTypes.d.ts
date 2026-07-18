@@ -362,6 +362,87 @@ export interface AdminUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiArticuloArticulo extends Schema.CollectionType {
+  collectionName: 'articulos';
+  info: {
+    displayName: 'Articulo';
+    pluralName: 'articulos';
+    singularName: 'articulo';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    autor: Attribute.Relation<
+      'api::articulo.articulo',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    categoria: Attribute.String;
+    contenido: Attribute.RichText;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::articulo.articulo',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    estado: Attribute.Enumeration<['borrador', 'publicado']> &
+      Attribute.DefaultTo<'borrador'>;
+    fecha_publicacion: Attribute.DateTime;
+    imagen: Attribute.String;
+    resumen: Attribute.Text;
+    titulo: Attribute.String & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::articulo.articulo',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiComentarioComentario extends Schema.CollectionType {
+  collectionName: 'comentarios';
+  info: {
+    displayName: 'Comentario';
+    pluralName: 'comentarios';
+    singularName: 'comentario';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    articulo: Attribute.Relation<
+      'api::comentario.comentario',
+      'manyToOne',
+      'api::articulo.articulo'
+    >;
+    autor: Attribute.Relation<
+      'api::comentario.comentario',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::comentario.comentario',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    fecha: Attribute.DateTime;
+    texto: Attribute.Text & Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::comentario.comentario',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiConversacionChatConversacionChat
   extends Schema.CollectionType {
   collectionName: 'conversacion_chats';
@@ -523,6 +604,46 @@ export interface ApiPublicacionPublicacion extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+  };
+}
+
+export interface ApiReaccionReaccion extends Schema.CollectionType {
+  collectionName: 'reacciones';
+  info: {
+    displayName: 'Reaccion';
+    pluralName: 'reacciones';
+    singularName: 'reaccion';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    articulo: Attribute.Relation<
+      'api::reaccion.reaccion',
+      'manyToOne',
+      'api::articulo.articulo'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::reaccion.reaccion',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    tipo: Attribute.Enumeration<['like', 'love', 'celebration', 'idea']> &
+      Attribute.Required;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::reaccion.reaccion',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    usuario: Attribute.Relation<
+      'api::reaccion.reaccion',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -962,10 +1083,13 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::articulo.articulo': ApiArticuloArticulo;
+      'api::comentario.comentario': ApiComentarioComentario;
       'api::conversacion-chat.conversacion-chat': ApiConversacionChatConversacionChat;
       'api::mensaje-chat.mensaje-chat': ApiMensajeChatMensajeChat;
       'api::portafolio.portafolio': ApiPortafolioPortafolio;
       'api::publicacion.publicacion': ApiPublicacionPublicacion;
+      'api::reaccion.reaccion': ApiReaccionReaccion;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

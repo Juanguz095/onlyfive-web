@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comentarios",
+  "info": {
+    "singularName": "comentario",
+    "pluralName": "comentarios",
+    "displayName": "Comentario"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "texto": {
+      "type": "text",
+      "required": true
+    },
+    "fecha": {
+      "type": "datetime"
+    },
+    "autor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "articulo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::articulo.articulo"
+    }
+  }
+}

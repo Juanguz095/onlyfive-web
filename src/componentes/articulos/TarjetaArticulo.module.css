@@ -1,0 +1,109 @@
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
+}
+
+.tarjetaImagen {
+  height: 170px;
+  background: #f0f4ff;
+  position: relative;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.imagenPortada {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+.badgeCategoria {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(237, 233, 254, 0.95);
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  position: relative;
+  z-index: 1;
+}
+
+.tarjetaCuerpo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.tarjetaTitulo {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.35;
+}
+
+.tarjetaDesc {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.65;
+  min-height: 58px;
+}
+
+.tarjetaMeta {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+
+.metaFila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.metaTexto {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.btnVerProyecto {
+  margin-top: 6px;
+  padding: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4361ee;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  transition: background 0.15s, border-color 0.15s;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.btnVerProyecto:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+@media (max-width: 768px) {
+  .tarjetaImagen {
+    height: 160px;
+  }
+}

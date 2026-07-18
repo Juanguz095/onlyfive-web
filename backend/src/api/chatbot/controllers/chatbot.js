@@ -3,7 +3,7 @@
 const crearRespuesta = (texto) => {
   const consulta = texto.toLowerCase()
 
-  if (consulta.includes('admision') || consulta.includes('admision') || consulta.includes('requisito')) {
+  if (consulta.includes('admision') || consulta.includes('inscripcion') || consulta.includes('requisito')) {
     return 'Para admision necesitas DNI, certificado de estudios, fotos y completar el proceso indicado por el instituto.'
   }
 

@@ -1,0 +1,48 @@
+.seccion {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.titulo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 10px;
+}
+
+.gridReacciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chipRespuesta {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 11px;
+  color: #444;
+  background: #fff;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chipRespuesta:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.chipActiva {
+  border-color: #4361ee;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.estado {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 10px;
+}

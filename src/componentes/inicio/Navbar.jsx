@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import estilos from './Navbar.module.css'
-import { useNavigate } from 'react-router-dom'
 
 const obtenerNombreUsuario = (usuario) => usuario?.username || usuario?.email || 'Estudiante'
 
@@ -58,6 +58,12 @@ export default function Navbar() {
   return (
     <nav className={estilos.nav}>
       <span className={estilos.logo}>I.E.S.P. Simón Bolívar</span>
+
+      <div className={estilos.enlaces}>
+        <NavLink to="/" className={({ isActive }) => `${estilos.enlace} ${isActive ? estilos.enlaceActivo : ''}`}>INICIO</NavLink>
+        <NavLink to="/articulos" className={({ isActive }) => `${estilos.enlace} ${isActive ? estilos.enlaceActivo : ''}`}>ARTÍCULOS</NavLink>
+        <NavLink to="/proyectos" className={({ isActive }) => `${estilos.enlace} ${isActive ? estilos.enlaceActivo : ''}`}>PROYECTOS</NavLink>
+      </div>
 
       {!usuario ? (
         <button className={estilos.btnIniciar} onClick={() => navegar('/login')}>

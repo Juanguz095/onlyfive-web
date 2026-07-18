@@ -4,7 +4,7 @@ import estilos from './SeccionActividades.module.css'
 
 const ciclosDisponibles = ['TODOS', 'CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV']
 const tiposDisponibles = ['TODOS', 'PROYECTOS', 'TALLERES', 'EVENTOS']
-const coloresFondo = ['#f0f4ff', '#fff7ed', '#f0fdf4', '#fef2f2']
+const clasesFondo = ['fondoAzul', 'fondoNaranja', 'fondoVerde', 'fondoRojo']
 
 const obtenerDescripcion = (descripcion) => {
   if (!descripcion) return 'Publicacion del portafolio academico del estudiante.'
@@ -32,7 +32,7 @@ const normalizarProyecto = (publicacion, indice) => {
     docente: atributos.docente || 'Docente no asignado',
     estudiante: obtenerEstudiante(atributos.autor),
     anio: fecha ? String(fecha.getFullYear()) : 'Sin fecha',
-    colorFondo: coloresFondo[indice % coloresFondo.length],
+    claseFondo: clasesFondo[indice % clasesFondo.length],
   }
 }
 
@@ -123,7 +123,7 @@ export default function SeccionActividades() {
           )}
           {!cargando && !error && proyectosFiltrados.map((p) => (
             <div key={p.id} className={estilos.tarjeta}>
-              <div className={estilos.tarjetaImagen} style={{ background: p.colorFondo }}>
+              <div className={`${estilos.tarjetaImagen} ${estilos[p.claseFondo]}`}>
                 <div className={estilos.badgeCiclo}>{p.ciclo}</div>
               </div>
               <div className={estilos.tarjetaCuerpo}>
