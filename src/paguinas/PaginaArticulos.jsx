@@ -18,6 +18,7 @@ const normalizarArticulo = (articulo) => ({
 export default function PaginaArticulos() {
   const [articulos, setArticulos] = useState([])
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('TODAS')
+  const [busqueda, setBusqueda] = useState('')
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
 
@@ -47,51 +48,64 @@ export default function PaginaArticulos() {
     return ['TODAS', ...listado]
   }, [articulos])
 
-  const articulosFiltrados = useMemo(() => (
-    articulos.filter((articulo) => (
-      categoriaSeleccionada === 'TODAS' || articulo.categoria === categoriaSeleccionada
-    ))
-  ), [articulos, categoriaSeleccionada])
+  const articulosFiltrados = useMemo(() => {
+    const texto = busqueda.trim().toLowerCase()
+
+    return articulos.filter((articulo) => {
+      const coincideCategoria = categoriaSeleccionada === 'TODAS' || articulo.categoria === categoriaSeleccionada
+      if (!coincideCategoria) return false
+
+      if (!texto) return true
+      const enTitulo = articulo.titulo.toLowerCase().includes(texto)
+      const enResumen = (articulo.resumen || '').toLowerCase().includes(texto)
+      const enAutor = (articulo.autor || '').toLowerCase().includes(texto)
+      return enTitulo || enResumen || enAutor
+    })
+  }, [articulos, categoriaSeleccionada, busqueda])
 
   return (
     <div className={estilos.pagina}>
       <Navbar />
-      <section className={estilos.seccion}>
+      <main className={estilos.main}>
         <header className={estilos.encabezado}>
-          <h2 className={estilos.titulo}>ARTÍCULOS</h2>
+          <h1 className={estilos.titulo}>Artículos</h1>
+          <p className={estilos.subtitulo}>
+            Publicaciones del programa: técnicas, experiencias y aprendizaje aplicado.
+          </p>
+
+          <div className={estilos.barra}>
+            <input
+              className={estilos.buscador}
+              value={busqueda}
+              onChange={(evento) => setBusqueda(evento.target.value)}
+              placeholder="Buscar por título, autor o resumen"
+            />
+          </div>
+
+          <div className={estilos.chips}>
+            {categorias.map((categoria) => (
+              <button
+                key={categoria}
+                className={`${estilos.chip} ${categoriaSeleccionada === categoria ? estilos.chipActivo : ''}`}
+                onClick={() => setCategoriaSeleccionada(categoria)}
+              >
+                {categoria}
+              </button>
+            ))}
+          </div>
         </header>
 
-        <div className={estilos.cuerpo}>
-          <aside className={estilos.sidebar}>
-            <p className={estilos.subtitulo}>
-              Explora publicaciones académicas, técnicas y experiencias del programa de cocina.
-            </p>
-            <div className={estilos.separador} />
-            <label className={estilos.labelFiltro} htmlFor="categoria-articulo">CATEGORÍA</label>
-            <select
-              id="categoria-articulo"
-              className={estilos.selectFiltro}
-              value={categoriaSeleccionada}
-              onChange={(evento) => setCategoriaSeleccionada(evento.target.value)}
-            >
-              {categorias.map((categoria) => (
-                <option key={categoria} value={categoria}>{categoria}</option>
-              ))}
-            </select>
-          </aside>
-
-          <main className={estilos.contenido}>
-            {cargando && <p className={estilos.estado}>Cargando...</p>}
-            {!cargando && error && <p className={estilos.estado}>{error}</p>}
-            {!cargando && !error && articulosFiltrados.length === 0 && (
-              <p className={estilos.estado}>No hay artículos para la categoría seleccionada.</p>
-            )}
-            {!cargando && !error && articulosFiltrados.length > 0 && (
-              <ListaArticulos articulos={articulosFiltrados} />
-            )}
-          </main>
-        </div>
-      </section>
+        <section className={estilos.contenido}>
+          {cargando && <div className={estilos.estado}>Cargando artículos...</div>}
+          {!cargando && error && <div className={estilos.estado}>{error}</div>}
+          {!cargando && !error && articulosFiltrados.length === 0 && (
+            <div className={estilos.estado}>No hay artículos para lo que estás buscando.</div>
+          )}
+          {!cargando && !error && articulosFiltrados.length > 0 && (
+            <ListaArticulos articulos={articulosFiltrados} />
+          )}
+        </section>
+      </main>
       <Footer />
     </div>
   )

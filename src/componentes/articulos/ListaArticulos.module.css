@@ -1,12 +1,4 @@
-.gridArticulos {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-@media (max-width: 768px) {
-  .gridArticulos {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
+.lista {
+  display: flex;
+  flex-direction: column;
 }

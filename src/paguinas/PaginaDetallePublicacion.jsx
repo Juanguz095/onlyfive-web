@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import Navbar from '../componentes/inicio/Navbar'
+import Footer from '../componentes/inicio/Footer'
+import estilos from './estilos/PaginaDetallePublicacion.module.css'
 
 const normalizarPublicacion = (dato) => {
   const atributos = dato?.attributes || {}
@@ -17,6 +20,11 @@ const normalizarPublicacion = (dato) => {
     fechaPublicacion: atributos.fecha_publicacion || '',
     autor: atributos.autor?.data?.attributes?.username || atributos.autor?.data?.attributes?.email || 'Estudiante',
   }
+}
+
+const formatearFecha = (fecha) => {
+  if (!fecha) return 'Sin fecha'
+  return new Date(fecha).toLocaleDateString('es-PE')
 }
 
 export default function PaginaDetallePublicacion() {
@@ -54,57 +62,74 @@ export default function PaginaDetallePublicacion() {
     cargarPublicacion()
   }, [id])
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#fff', padding: '24px 16px' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '14px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <Link to="/" style={{ color: '#4361ee', textDecoration: 'none', fontSize: '13px' }}>← Inicio</Link>
-          <Link to="/dashboard" style={{ color: '#4361ee', textDecoration: 'none', fontSize: '13px' }}>Ir al dashboard</Link>
-        </div>
+  const claseEstado = useMemo(() => {
+    if (!publicacion) return ''
+    if (publicacion.estado === 'publicado') return estilos.badgeEstadoPublicado
+    if (publicacion.estado === 'archivado') return estilos.badgeEstadoArchivado
+    return estilos.badgeEstadoBorrador
+  }, [publicacion])
 
-        {cargando && <p>Cargando publicación...</p>}
-        {error && <p>{error}</p>}
+  return (
+    <div className={estilos.pagina}>
+      <Navbar />
+      <main className={estilos.main}>
+        <nav className={estilos.breadcrumb}>
+          <Link to="/">Inicio</Link>
+          <span>→</span>
+          <Link to="/proyectos">Proyectos</Link>
+          <span>→</span>
+          <span>Detalle</span>
+        </nav>
+
+        {cargando && <div className={estilos.estado}>Cargando proyecto...</div>}
+        {!cargando && error && <div className={estilos.estado}>{error}</div>}
 
         {!cargando && !error && publicacion && (
-          <article
-            style={{
-              border: '1px solid #e8e8e8',
-              borderRadius: '12px',
-              padding: '22px',
-              background: '#fcfcfc',
-            }}
-          >
-            <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
-              {publicacion.ciclo} · {publicacion.tipo} · {publicacion.estado}
-            </p>
-            <h1 style={{ margin: '8px 0 6px', color: '#111', fontSize: '30px', lineHeight: 1.2 }}>
-              {publicacion.titulo}
-            </h1>
-            <p style={{ margin: 0, color: '#6b7280', fontSize: '13px' }}>
-              Categoría: {publicacion.categoria}
-            </p>
+          <>
+            <section className={estilos.hero}>
+              <div className={estilos.heroTop}>
+                <div className={estilos.badges}>
+                  <span className={estilos.badge}>{publicacion.ciclo}</span>
+                  <span className={estilos.badge}>{publicacion.tipo}</span>
+                  <span className={`${estilos.badge} ${claseEstado}`}>{publicacion.estado}</span>
+                </div>
+              </div>
 
-            <div style={{ marginTop: '16px', display: 'grid', gap: '8px', fontSize: '13px', color: '#444' }}>
-              <p style={{ margin: 0 }}><strong>Estudiante:</strong> {publicacion.autor}</p>
-              <p style={{ margin: 0 }}><strong>Taller:</strong> {publicacion.taller}</p>
-              <p style={{ margin: 0 }}><strong>Docente:</strong> {publicacion.docente}</p>
-              <p style={{ margin: 0 }}>
-                <strong>Fecha:</strong>{' '}
-                {publicacion.fechaPublicacion
-                  ? new Date(publicacion.fechaPublicacion).toLocaleDateString('es-PE')
-                  : 'Sin fecha'}
-              </p>
-            </div>
+              <div className={estilos.tituloWrap}>
+                <h1 className={estilos.titulo}>{publicacion.titulo}</h1>
+                <p className={estilos.subtitulo}>
+                  Categoría: <strong>{publicacion.categoria}</strong>
+                </p>
+              </div>
 
-            <div style={{ marginTop: '18px', borderTop: '1px solid #ebebeb', paddingTop: '16px' }}>
-              <h2 style={{ margin: '0 0 8px', color: '#111', fontSize: '18px' }}>Descripción del proyecto</h2>
-              <p style={{ margin: 0, color: '#444', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-                {publicacion.descripcion}
-              </p>
-            </div>
-          </article>
+              <div className={estilos.gridMeta}>
+                <div className={estilos.metaCard}>
+                  <div className={estilos.metaLabel}>ESTUDIANTE</div>
+                  <div className={estilos.metaValor}>{publicacion.autor}</div>
+                </div>
+                <div className={estilos.metaCard}>
+                  <div className={estilos.metaLabel}>DOCENTE</div>
+                  <div className={estilos.metaValor}>{publicacion.docente}</div>
+                </div>
+                <div className={estilos.metaCard}>
+                  <div className={estilos.metaLabel}>TALLER</div>
+                  <div className={estilos.metaValor}>{publicacion.taller}</div>
+                </div>
+                <div className={estilos.metaCard}>
+                  <div className={estilos.metaLabel}>FECHA</div>
+                  <div className={estilos.metaValor}>{formatearFecha(publicacion.fechaPublicacion)}</div>
+                </div>
+              </div>
+            </section>
+
+            <section className={estilos.contenido}>
+              <h2 className={estilos.tituloSeccion}>Descripción del proyecto</h2>
+              <p className={estilos.texto}>{publicacion.descripcion}</p>
+            </section>
+          </>
         )}
-      </div>
+      </main>
+      <Footer />
     </div>
   )
 }
