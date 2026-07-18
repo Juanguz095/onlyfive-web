@@ -35,6 +35,7 @@ module.exports = createCoreController('api::portafolio.portafolio', ({ strapi })
     const portafolios = await strapi.entityService.findMany('api::portafolio.portafolio', {
       filters: {
         slug_compartible: slug,
+        es_publico: true,
       },
       populate: {
         publicaciones: {

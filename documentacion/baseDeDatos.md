@@ -1,9 +1,5 @@
 # Guion — Diagramas de Flujo y Base de Datos
 
-## Diagramas de Flujo
-
-Los diagramas de flujo muestran cómo se mueve la información dentro del sistema
-dependiendo de las acciones que realiza cada usuario. Tenemos cuatro flujos principales.
 
 ### Inicio de Sesión
 
@@ -89,10 +85,9 @@ y mejorar las respuestas del chatbot con el tiempo.
 ## Base de Datos
 
 La base de datos del sistema se llama CocinaBD y corre en MariaDB 10.4,
-administrada mediante phpMyAdmin. Fue generada automáticamente por Strapi v4
-al momento de definir los content types desde su panel de administración.
-
-Tiene cinco tablas principales de negocio y cuatro tablas de relación.
+Fue generada automáticamente por Strapi v4 que es un framework de backend para Node.js que nos permite crear APIs y gestionar la base de datos de manera sencilla.
+Algo importante de aclarar antes de hablar de las tablas: en este proyecto no creamos la base de datos escribiendo SQL manualmente. En cambio, usamos Strapi, que es el backend del sistema. Cuando nosotros definimos desde el panel de Strapi qué información iba a manejar el sistema — publicaciones, portafolios, usuarios, chatbot — Strapi tradujo esas definiciones automáticamente en tablas reales dentro de MariaDB.
+Pero Strapi no solo crea las tablas del negocio. También genera automáticamente un conjunto grande de tablas propias para su funcionamiento interno: tablas para gestionar los administradores del panel, los roles y permisos, los tokens de acceso a la API, la configuración del sistema, los archivos subidos, entre otras. Si uno abre phpMyAdmin y ve la base de datos completa, va a encontrar muchas más tablas de las que diseñamos nosotros.
 
 ### Las cinco tablas principales
 
@@ -113,7 +108,8 @@ llamado slug_compartible que genera el enlace único del portafolio, y el campo
 es_publico que controla si ese enlace es accesible sin login.
 
 **CONVERSACION_CHATS** registra cada sesión de conversación que se inicia con el
-chatbot. Guarda un identificador único de la sesión y el nombre del visitante que
+chatbot. 
+Guarda un identificador único de la sesión y el nombre del visitante que
 inició el chat.
 
 **MENSAJE_CHATS** almacena cada mensaje individual dentro de una conversación.
