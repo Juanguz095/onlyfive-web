@@ -35,6 +35,7 @@ const normalizarProyecto = (publicacion, indice) => {
     estudiante: obtenerEstudiante(atributos.autor),
     anio: fecha ? String(fecha.getFullYear()) : 'Sin fecha',
     claseFondo: clasesFondo[indice % clasesFondo.length],
+    imagen: atributos.imagen || '',
   }
 }
 
@@ -126,6 +127,7 @@ export default function PaginaProyectos() {
             {!cargando && !error && proyectosFiltrados.map((proyecto) => (
               <div key={proyecto.id} className={estilos.tarjeta}>
                 <div className={`${estilos.tarjetaImagen} ${estilos[proyecto.claseFondo]}`}>
+                  {proyecto.imagen && <img src={proyecto.imagen} alt={proyecto.titulo} className={estilos.coverImagen} />}
                   <div className={estilos.badgeCiclo}>{proyecto.ciclo}</div>
                 </div>
                 <div className={estilos.tarjetaCuerpo}>

@@ -11,6 +11,7 @@ const normalizarPublicacion = (dato) => {
     id: dato?.id,
     titulo: atributos.titulo || 'Sin título',
     descripcion: atributos.descripcion || 'Sin descripción',
+    imagen: atributos.imagen || '',
     estado: atributos.estado || 'borrador',
     categoria: atributos.categoria || 'Sin categoría',
     ciclo: atributos.ciclo || 'Sin ciclo',
@@ -25,6 +26,63 @@ const normalizarPublicacion = (dato) => {
 const formatearFecha = (fecha) => {
   if (!fecha) return 'Sin fecha'
   return new Date(fecha).toLocaleDateString('es-PE')
+}
+
+const tieneHtml = (texto) => /<[^>]+>/i.test(texto)
+
+const escaparHtml = (texto) => texto
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;')
+
+const aplicarFormatoInline = (texto) => texto
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\*(.+?)\*/g, '<em>$1</em>')
+
+const renderizarDescripcion = (textoOriginal) => {
+  if (!textoOriginal) return '<p>Sin descripción</p>'
+
+  if (tieneHtml(textoOriginal)) {
+    return textoOriginal
+  }
+
+  const texto = escaparHtml(textoOriginal)
+  const bloques = texto.split(/\n\s*\n/g)
+
+  const html = bloques.map((bloque) => {
+    const lineas = bloque.split('\n').filter((linea) => linea.trim())
+
+    if (lineas.length === 0) return ''
+
+    if (lineas.every((linea) => linea.trim().startsWith('- '))) {
+      const items = lineas
+        .map((linea) => `<li>${aplicarFormatoInline(linea.replace(/^\s*-\s*/, ''))}</li>`)
+        .join('')
+      return `<ul>${items}</ul>`
+    }
+
+    if (lineas.length === 1 && lineas[0].startsWith('### ')) {
+      return `<h3>${aplicarFormatoInline(lineas[0].slice(4))}</h3>`
+    }
+
+    if (lineas.length === 1 && lineas[0].startsWith('## ')) {
+      return `<h2>${aplicarFormatoInline(lineas[0].slice(3))}</h2>`
+    }
+
+    if (lineas.length === 1 && lineas[0].startsWith('# ')) {
+      return `<h1>${aplicarFormatoInline(lineas[0].slice(2))}</h1>`
+    }
+
+    if (lineas.length === 1 && lineas[0].startsWith('&gt; ')) {
+      return `<blockquote>${aplicarFormatoInline(lineas[0].slice(5))}</blockquote>`
+    }
+
+    return `<p>${aplicarFormatoInline(lineas.join('<br/>'))}</p>`
+  }).join('')
+
+  return html || '<p>Sin descripción</p>'
 }
 
 export default function PaginaDetallePublicacion() {
@@ -102,6 +160,12 @@ export default function PaginaDetallePublicacion() {
                 </p>
               </div>
 
+              {publicacion.imagen && (
+                <div className={estilos.portadaWrap}>
+                  <img src={publicacion.imagen} alt={publicacion.titulo} className={estilos.portada} />
+                </div>
+              )}
+
               <div className={estilos.gridMeta}>
                 <div className={estilos.metaCard}>
                   <div className={estilos.metaLabel}>ESTUDIANTE</div>
@@ -124,7 +188,10 @@ export default function PaginaDetallePublicacion() {
 
             <section className={estilos.contenido}>
               <h2 className={estilos.tituloSeccion}>Descripción del proyecto</h2>
-              <p className={estilos.texto}>{publicacion.descripcion}</p>
+              <div
+                className={estilos.texto}
+                dangerouslySetInnerHTML={{ __html: renderizarDescripcion(publicacion.descripcion) }}
+              />
             </section>
           </>
         )}

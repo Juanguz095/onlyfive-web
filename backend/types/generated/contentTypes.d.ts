@@ -539,6 +539,7 @@ export interface ApiPortafolioPortafolio extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    orden_publicaciones: Attribute.JSON & Attribute.DefaultTo<[]>;
     publicaciones: Attribute.Relation<
       'api::portafolio.portafolio',
       'manyToMany',
@@ -588,6 +589,7 @@ export interface ApiPublicacionPublicacion extends Schema.CollectionType {
     estado: Attribute.Enumeration<['borrador', 'publicado', 'archivado']> &
       Attribute.DefaultTo<'borrador'>;
     fecha_publicacion: Attribute.DateTime;
+    imagen: Attribute.String;
     portafolios: Attribute.Relation<
       'api::publicacion.publicacion',
       'manyToMany',

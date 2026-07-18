@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import estilos from './PaginaPortafolioPublico.module.css'
 
 const normalizarPublicacion = (publicacion) => ({
   id: publicacion.id,
@@ -9,6 +10,14 @@ const normalizarPublicacion = (publicacion) => ({
   fecha_publicacion: publicacion.attributes?.fecha_publicacion || '',
   descripcion: publicacion.attributes?.descripcion || '',
 })
+
+const sanearHtmlBasico = (html) => String(html || '')
+  .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+  .replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '')
+  .replace(/\son\w+="[^"]*"/gi, '')
+  .replace(/\son\w+='[^']*'/gi, '')
+  .replace(/javascript:/gi, '')
+  .trim()
 
 export default function PaginaPortafolioPublico() {
   const { slug } = useParams()
@@ -52,64 +61,63 @@ export default function PaginaPortafolioPublico() {
     }
   }, [cargando, portafolio, searchParams])
 
+  const nombrePortafolio = useMemo(() => portafolio?.attributes?.titulo || 'Portafolio', [portafolio])
+
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', padding: '28px 16px' }}>
-      <div style={{ maxWidth: '980px', margin: '0 auto' }}>
-        <header style={{ marginBottom: '20px' }}>
-          <p style={{ margin: 0, fontSize: '12px', color: '#777', letterSpacing: '0.03em' }}>PORTAFOLIO PÚBLICO</p>
-          <h1 style={{ margin: '8px 0 10px', fontSize: '30px', color: '#111' }}>
-            {portafolio?.attributes?.titulo || 'Portafolio'}
-          </h1>
+    <div className={estilos.pagina}>
+      <div className={estilos.contenedor}>
+        <header className={estilos.header}>
+          <p className={estilos.badge}>PORTAFOLIO PÚBLICO</p>
+          <h1 className={estilos.nombre}>{nombrePortafolio}</h1>
           {portafolio?.attributes?.descripcion && (
-            <p style={{ margin: 0, maxWidth: '800px', color: '#555', lineHeight: 1.55 }}>
-              {portafolio.attributes.descripcion}
-            </p>
+            <p className={estilos.descripcion}>{portafolio.attributes.descripcion}</p>
           )}
-          <p style={{ marginTop: '10px', fontSize: '12px', color: '#777' }}>
-            Publicaciones visibles: {publicaciones.length}
-          </p>
+          <p className={estilos.meta}>Publicaciones visibles: {publicaciones.length}</p>
         </header>
 
-        {cargando && <p>Cargando portafolio...</p>}
-        {error && <p>{error}</p>}
+        {cargando && <p className={estilos.estado}>Cargando portafolio...</p>}
+        {!cargando && error && <p className={estilos.estado}>{error}</p>}
 
         {!cargando && !error && (
-          <>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '12px' }}>
-              {publicaciones.map((publicacion) => (
-                <li
-                  key={publicacion.id}
-                  style={{
-                    border: '1px solid #e9e9e9',
-                    borderRadius: '10px',
-                    padding: '16px',
-                    background: '#fafafa',
-                  }}
-                >
-                  <h2 style={{ margin: 0, fontSize: '18px', color: '#111' }}>{publicacion.titulo}</h2>
-                  <p style={{ margin: '7px 0 0', color: '#666', fontSize: '13px' }}>
-                    {publicacion.categoria} · {publicacion.estado} ·{' '}
-                    {publicacion.fecha_publicacion
-                      ? new Date(publicacion.fecha_publicacion).toLocaleDateString('es-PE')
-                      : 'Sin fecha'}
-                  </p>
+          <div className={estilos.grid}>
+            {publicaciones.map((publicacion) => (
+              <article key={publicacion.id} className={estilos.tarjeta}>
+                <div className={estilos.tarjetaHeader}>
+                  <h2 className={estilos.tarjetaTitulo}>{publicacion.titulo}</h2>
+                  <span
+                    className={`${estilos.badgeEstado} ${publicacion.estado === 'publicado' ? estilos.badgePublicado : estilos.badgeBorrador}`}
+                  >
+                    {publicacion.estado}
+                  </span>
+                </div>
+                <div className={estilos.tarjetaBody}>
+                  <div className={estilos.tarjetaMeta}>
+                    <span>{publicacion.categoria}</span>
+                    <span>
+                      {publicacion.fecha_publicacion
+                        ? new Date(publicacion.fecha_publicacion).toLocaleDateString('es-PE')
+                        : 'Sin fecha'}
+                    </span>
+                  </div>
                   {publicacion.descripcion && (
-                    <p style={{ margin: '10px 0 0', color: '#444', lineHeight: 1.6 }}>{publicacion.descripcion}</p>
+                    <div
+                      className={estilos.tarjetaDesc}
+                      dangerouslySetInnerHTML={{ __html: sanearHtmlBasico(publicacion.descripcion) }}
+                    />
                   )}
-                </li>
-              ))}
-            </ul>
+                  <Link className={estilos.verProyecto} to={`/publicacion/${publicacion.id}`}>Ver proyecto</Link>
+                </div>
+              </article>
+            ))}
 
             {publicaciones.length === 0 && (
-              <p style={{ marginTop: '10px' }}>Este portafolio no tiene publicaciones disponibles para vista pública.</p>
+              <p className={estilos.empty}>Este portafolio no tiene publicaciones disponibles para vista pública.</p>
             )}
-          </>
+          </div>
         )}
 
-        <div style={{ marginTop: '22px' }}>
-          <Link to="/" style={{ fontSize: '13px', color: '#4361ee', textDecoration: 'none' }}>
-            ← Volver al inicio
-          </Link>
+        <div className={estilos.volver}>
+          <Link to="/" className={estilos.volverLink}>← Volver al inicio</Link>
         </div>
       </div>
     </div>

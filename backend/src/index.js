@@ -8,6 +8,7 @@ const accionesPorRol = {
     'api::articulo.articulo.findOne',
     'api::comentario.comentario.find',
     'api::reaccion.reaccion.find',
+    'api::portafolio.portafolio.publicoPorSlug',
     'api::chatbot.chatbot.responder',
   ],
   authenticated: [
@@ -21,6 +22,11 @@ const accionesPorRol = {
     'api::portafolio.portafolio.find',
     'api::portafolio.portafolio.findOne',
     'api::portafolio.portafolio.create',
+    'api::portafolio.portafolio.update',
+    'api::portafolio.portafolio.delete',
+    'api::portafolio.portafolio.actualizarOrden',
+    'api::portafolio.portafolio.togglePublico',
+    'api::portafolio.portafolio.mio',
 
     'api::articulo.articulo.find',
     'api::articulo.articulo.findOne',
@@ -41,6 +47,7 @@ const accionesPorRol = {
     'api::reaccion.reaccion.delete',
 
     'api::chatbot.chatbot.responder',
+    'plugin::upload.content-api.upload',
   ],
 }
 
@@ -52,7 +59,8 @@ const esPermisoDelProyecto = (accion) => (
   accion.startsWith('api::mensaje-chat.') ||
   accion.startsWith('api::articulo.') ||
   accion.startsWith('api::comentario.') ||
-  accion.startsWith('api::reaccion.')
+  accion.startsWith('api::reaccion.') ||
+  accion.startsWith('plugin::upload.')
 )
 
 const configurarPermisos = async (strapi, tipoRol, accionesPermitidas) => {

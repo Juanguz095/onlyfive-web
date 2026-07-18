@@ -25,6 +25,10 @@
       "type": "boolean",
       "default": false
     },
+    "orden_publicaciones": {
+      "type": "json",
+      "default": []
+    },
     "estudiante": {
       "type": "relation",
       "relation": "manyToOne",

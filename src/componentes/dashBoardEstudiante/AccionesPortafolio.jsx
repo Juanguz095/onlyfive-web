@@ -1,45 +1,61 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Eye, Copy, FileDown } from 'lucide-react'
 import estilos from './AccionesPortafolio.module.css'
 
+const copiarConFallback = async (texto) => {
+  try {
+    await navigator.clipboard.writeText(texto)
+    return true
+  } catch {
+    try {
+      const area = document.createElement('textarea')
+      area.value = texto
+      area.setAttribute('readonly', 'true')
+      area.style.position = 'absolute'
+      area.style.left = '-9999px'
+      document.body.appendChild(area)
+      area.select()
+      const resultado = document.execCommand('copy')
+      document.body.removeChild(area)
+      return Boolean(resultado)
+    } catch {
+      return false
+    }
+  }
+}
+
 export default function AccionesPortafolio({ enlacePublicoPortafolio }) {
+  const navegar = useNavigate()
   const [mensaje, setMensaje] = useState('')
-
-
 
   const mostrarMensaje = (texto) => {
     setMensaje(texto)
     window.setTimeout(() => setMensaje(''), 2500)
   }
 
-  const abrirVistaPublica = () => {
-    if (!enlacePublicoPortafolio) {
-      mostrarMensaje('Aún no se encontró un enlace compartible para este portafolio.')
-      return
-    }
+  const validarEnlace = () => {
+    if (enlacePublicoPortafolio) return true
 
+    mostrarMensaje('Activa el modo público desde la página Portafolio para usar esta acción.')
+    window.setTimeout(() => navegar('/portafolio'), 600)
+    return false
+  }
+
+  const abrirVistaPublica = () => {
+    if (!validarEnlace()) return
     window.open(enlacePublicoPortafolio, '_blank', 'noopener,noreferrer')
   }
 
   const copiarEnlace = async () => {
-    if (!enlacePublicoPortafolio) {
-      mostrarMensaje('Aún no se encontró un enlace compartible para este portafolio.')
-      return
-    }
+    if (!validarEnlace()) return
 
-    try {
-      await navigator.clipboard.writeText(enlacePublicoPortafolio)
-      mostrarMensaje('Enlace copiado al portapapeles.')
-    } catch {
-      mostrarMensaje('No se pudo copiar automáticamente. Copia manualmente la URL.')
-    }
+    const copiado = await copiarConFallback(enlacePublicoPortafolio)
+    mostrarMensaje(copiado ? 'Enlace copiado al portapapeles.' : 'No se pudo copiar automáticamente.')
   }
 
   const exportarPDF = () => {
-    if (!enlacePublicoPortafolio) {
-      mostrarMensaje('Aún no se encontró un enlace compartible para este portafolio.')
-      return
-    }
+    if (!validarEnlace()) return
 
     const separador = enlacePublicoPortafolio.includes('?') ? '&' : '?'
     const enlaceImpresion = `${enlacePublicoPortafolio}${separador}print=1`

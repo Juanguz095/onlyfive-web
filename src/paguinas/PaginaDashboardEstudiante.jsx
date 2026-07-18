@@ -18,6 +18,7 @@ const normalizarPublicacion = (publicacion) => ({
   tipo: publicacion.attributes?.tipo || 'PROYECTOS',
   taller: publicacion.attributes?.taller || '',
   docente: publicacion.attributes?.docente || '',
+  imagen: publicacion.attributes?.imagen || '',
   fecha_publicacion: publicacion.attributes?.fecha_publicacion || '',
 })
 
@@ -32,6 +33,17 @@ const obtenerIniciales = (nombre) => (
     .toUpperCase()
 )
 
+const construirTituloPortafolio = (usuario) => {
+  const nombre = usuario?.username || usuario?.email || 'Estudiante'
+  return `Portafolio de ${nombre}`
+}
+
+const extraerPrimerPortafolio = (respuesta) => {
+  if (!respuesta?.data) return null
+  if (Array.isArray(respuesta.data)) return respuesta.data[0] || null
+  return respuesta.data
+}
+
 export default function PaginaDashboardEstudiante() {
   const location = useLocation()
   const [publicaciones, setPublicaciones] = useState([])
@@ -41,6 +53,10 @@ export default function PaginaDashboardEstudiante() {
   const [mostrarFormularioNuevaPublicacion, setMostrarFormularioNuevaPublicacion] = useState(false)
   const [enlacePublicoPortafolio, setEnlacePublicoPortafolio] = useState('')
   const [publicacionEnEdicion, setPublicacionEnEdicion] = useState(null)
+  const [portafolioId, setPortafolioId] = useState(null)
+  const [publicacionesEnPortafolioIds, setPublicacionesEnPortafolioIds] = useState([])
+  const [cargandoPortafolio, setCargandoPortafolio] = useState(false)
+  const [mensajePortafolio, setMensajePortafolio] = useState('')
 
   useEffect(() => {
     const query = new URLSearchParams(location.search)
@@ -49,6 +65,97 @@ export default function PaginaDashboardEstudiante() {
       setMostrarFormularioNuevaPublicacion(true)
     }
   }, [location.search])
+
+  const aplicarEstadoPortafolio = (portafolio) => {
+    if (!portafolio?.id) {
+      setPortafolioId(null)
+      setPublicacionesEnPortafolioIds([])
+      setEnlacePublicoPortafolio('')
+      return
+    }
+
+    setPortafolioId(portafolio.id)
+
+    const slugCompartible = portafolio?.attributes?.slug_compartible
+    setEnlacePublicoPortafolio(slugCompartible ? `${window.location.origin}/portafolio/publico/${slugCompartible}` : '')
+
+    const idsPortafolio = (portafolio?.attributes?.publicaciones?.data || [])
+      .map((publicacion) => publicacion.id)
+      .filter(Boolean)
+
+    setPublicacionesEnPortafolioIds(idsPortafolio)
+  }
+
+  const pedirPortafolioMio = async (jwt) => {
+    try {
+      const respuesta = await fetch('http://localhost:1337/api/portafolios/mio?populate=publicaciones', {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+
+      const datos = await respuesta.json()
+
+      if (!respuesta.ok) {
+        return null
+      }
+
+      return extraerPrimerPortafolio(datos)
+    } catch {
+      return null
+    }
+  }
+
+  const pedirPortafolioPorFiltro = async (jwt, usuarioId) => {
+    try {
+      const respuesta = await fetch(
+        `http://localhost:1337/api/portafolios?filters[estudiante][id][$eq]=${usuarioId}&populate=publicaciones&sort=id:desc`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      )
+
+      const datos = await respuesta.json()
+
+      if (!respuesta.ok) {
+        return null
+      }
+
+      return extraerPrimerPortafolio(datos)
+    } catch {
+      return null
+    }
+  }
+
+  const crearPortafolio = async (jwt, usuarioActual) => {
+    const respuestaCrear = await fetch('http://localhost:1337/api/portafolios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        data: {
+          titulo: construirTituloPortafolio(usuarioActual),
+          descripcion: 'Portafolio personal del estudiante.',
+          es_publico: false,
+          publicaciones: [],
+          orden_publicaciones: [],
+        },
+      }),
+    })
+
+    const datosCrear = await respuestaCrear.json()
+
+    if (!respuestaCrear.ok || !datosCrear?.data?.id) {
+      const detalle = datosCrear?.error?.message || datosCrear?.message || 'No se pudo crear el portafolio'
+      throw new Error(detalle)
+    }
+
+    return datosCrear.data
+  }
 
   useEffect(() => {
     const cargarPublicaciones = async () => {
@@ -66,47 +173,35 @@ export default function PaginaDashboardEstudiante() {
             Authorization: `Bearer ${jwt}`,
           },
         })
-        const usuario = await respuestaUsuario.json()
+        const usuarioAutenticado = await respuestaUsuario.json()
 
-        if (!respuestaUsuario.ok || !usuario.id) {
+        if (!respuestaUsuario.ok || !usuarioAutenticado.id) {
           throw new Error('No se pudo obtener el usuario')
         }
 
-        setUsuario(usuario)
+        setUsuario(usuarioAutenticado)
 
-        const [respuestaPublicaciones, respuestaPortafolio] = await Promise.all([
-          fetch('http://localhost:1337/api/publicacions/mias', {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }),
-          fetch(`http://localhost:1337/api/portafolios?filters[estudiante][id][$eq]=${usuario.id}&sort=id:desc`, {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }),
-        ])
+        const respuestaPublicaciones = await fetch('http://localhost:1337/api/publicacions/mias', {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        })
 
-        const [datosPublicaciones, datosPortafolio] = await Promise.all([
-          respuestaPublicaciones.json(),
-          respuestaPortafolio.json(),
-        ])
+        const datosPublicaciones = await respuestaPublicaciones.json()
 
         if (!respuestaPublicaciones.ok) {
-          throw new Error('No se pudieron cargar las publicaciones')
-        }
-
-        if (respuestaPortafolio.ok) {
-          const portafolio = datosPortafolio.data?.[0]
-          const slugCompartible = portafolio?.attributes?.slug_compartible
-          if (slugCompartible) {
-            setEnlacePublicoPortafolio(`${window.location.origin}/portafolio/publico/${slugCompartible}`)
-          }
+          const detalle = datosPublicaciones?.error?.message || datosPublicaciones?.message || 'No se pudieron cargar las publicaciones'
+          throw new Error(detalle)
         }
 
         setPublicaciones((datosPublicaciones.data || []).map(normalizarPublicacion))
-      } catch {
-        setError('Error al cargar publicaciones')
+
+        const portafolioMio = await pedirPortafolioMio(jwt)
+        const portafolioFinal = portafolioMio || await pedirPortafolioPorFiltro(jwt, usuarioAutenticado.id)
+
+        aplicarEstadoPortafolio(portafolioFinal)
+      } catch (errorCarga) {
+        setError(errorCarga?.message || 'Error al cargar publicaciones')
       } finally {
         setCargando(false)
       }
@@ -114,6 +209,73 @@ export default function PaginaDashboardEstudiante() {
 
     cargarPublicaciones()
   }, [])
+
+  const mostrarMensajePortafolio = (texto) => {
+    setMensajePortafolio(texto)
+    window.setTimeout(() => setMensajePortafolio(''), 2500)
+  }
+
+  const asegurarPortafolio = async (jwt, usuarioActual) => {
+    if (portafolioId) return portafolioId
+
+    let portafolio = await pedirPortafolioMio(jwt)
+
+    if (!portafolio && usuarioActual?.id) {
+      portafolio = await pedirPortafolioPorFiltro(jwt, usuarioActual.id)
+    }
+
+    if (!portafolio) {
+      portafolio = await crearPortafolio(jwt, usuarioActual)
+    }
+
+    aplicarEstadoPortafolio(portafolio)
+    return portafolio.id
+  }
+
+  const manejarAgregarAlPortafolio = async (publicacion) => {
+    const jwt = localStorage.getItem('jwt')
+    if (!jwt || !usuario?.id || !publicacion?.id) return
+
+    if (publicacionesEnPortafolioIds.includes(publicacion.id)) {
+      mostrarMensajePortafolio('La publicación ya está en tu portafolio')
+      return
+    }
+
+    setCargandoPortafolio(true)
+
+    try {
+      const idPortafolio = await asegurarPortafolio(jwt, usuario)
+      const nuevosIds = [...publicacionesEnPortafolioIds, publicacion.id]
+
+      const respuestaUpdate = await fetch(`http://localhost:1337/api/portafolios/${idPortafolio}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          data: {
+            publicaciones: nuevosIds,
+            orden_publicaciones: nuevosIds,
+          },
+        }),
+      })
+
+      const datosUpdate = await respuestaUpdate.json()
+
+      if (!respuestaUpdate.ok) {
+        const detalle = datosUpdate?.error?.message || datosUpdate?.message || 'No se pudo actualizar el portafolio'
+        throw new Error(detalle)
+      }
+
+      setPublicacionesEnPortafolioIds(nuevosIds)
+      mostrarMensajePortafolio('Publicación agregada al portafolio')
+    } catch (errorPeticion) {
+      mostrarMensajePortafolio(errorPeticion?.message || 'No se pudo agregar al portafolio')
+    } finally {
+      setCargandoPortafolio(false)
+    }
+  }
 
   const manejarPublicacionCreada = (publicacionCreada) => {
     setPublicaciones((previo) => [normalizarPublicacion(publicacionCreada), ...previo])
@@ -150,7 +312,7 @@ export default function PaginaDashboardEstudiante() {
   const nombreUsuario = obtenerNombreUsuario(usuario)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff' }}>
+    <div className={estilos.pagina}>
       <HeaderDashboard migaActiva="Mi portafolio" nombreUsuario={nombreUsuario} iniciales={obtenerIniciales(nombreUsuario)} />
       <div className={estilos.cuerpo}>
         <SidebarEstudiante vistaActiva="dashboard" onNuevaPublicacion={abrirFormularioCrear} />
@@ -160,6 +322,9 @@ export default function PaginaDashboardEstudiante() {
             labelPanel="Panel de estudiante"
             enlacePublicoPortafolio={enlacePublicoPortafolio}
           />
+
+          {mensajePortafolio && <p className={estilos.mensajePortafolio}>{mensajePortafolio}</p>}
+
           {mostrarFormularioNuevaPublicacion && (
             <FormularioNuevaPublicacion
               modo={publicacionEnEdicion ? 'editar' : 'crear'}
@@ -169,12 +334,19 @@ export default function PaginaDashboardEstudiante() {
               onCerrar={cerrarFormulario}
             />
           )}
+
           {cargando && <p>Cargando...</p>}
           {error && <p>{error}</p>}
           {!cargando && !error && (
             <>
               <TarjetasMetricas publicaciones={publicaciones} />
-              <ListaPublicaciones publicaciones={publicaciones} onEditarPublicacion={abrirFormularioEditar} />
+              <ListaPublicaciones
+                publicaciones={publicaciones}
+                onEditarPublicacion={abrirFormularioEditar}
+                onAgregarAlPortafolio={manejarAgregarAlPortafolio}
+                idsEnPortafolio={publicacionesEnPortafolioIds}
+                bloqueandoPortafolio={cargandoPortafolio}
+              />
             </>
           )}
         </main>

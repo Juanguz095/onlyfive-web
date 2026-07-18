@@ -16,8 +16,9 @@ module.exports = createCoreController('api::publicacion.publicacion', ({ strapi 
       },
       populate: '*',
       sort: {
-        fecha_publicacion: 'desc',
+        createdAt: 'desc',
       },
+      limit: 500,
     })
 
     ctx.body = {
@@ -29,25 +30,32 @@ module.exports = createCoreController('api::publicacion.publicacion', ({ strapi 
   },
 
   async create(ctx) {
-    if (ctx.state.user) {
-      const requestBody = ctx.request?.['body'] && typeof ctx.request['body'] === 'object'
-        ? ctx.request['body']
-        : {}
-
-      const dataBody = requestBody.data && typeof requestBody.data === 'object'
-        ? requestBody.data
-        : {}
-
-      ctx.request['body'] = {
-        ...requestBody,
-        data: {
-          ...dataBody,
-          autor: ctx.state.user.id,
-        },
-      }
+    if (!ctx.state.user) {
+      return ctx.unauthorized('Debes iniciar sesion')
     }
 
-    return super.create(ctx)
+    const requestBody = ctx.request?.['body'] && typeof ctx.request['body'] === 'object'
+      ? ctx.request['body']
+      : {}
+
+    const dataBody = requestBody.data && typeof requestBody.data === 'object'
+      ? requestBody.data
+      : {}
+
+    const creada = await strapi.entityService.create('api::publicacion.publicacion', {
+      data: {
+        ...dataBody,
+        autor: ctx.state.user.id,
+      },
+      populate: '*',
+    })
+
+    ctx.body = {
+      data: {
+        id: creada.id,
+        attributes: creada,
+      },
+    }
   },
 
   async update(ctx) {

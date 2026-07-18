@@ -1,0 +1,163 @@
+.pagina {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.contenedor {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 16px;
+}
+
+.header {
+  border-bottom: 1px solid #000;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.nombre {
+  font-size: 30px;
+  font-weight: 900;
+  color: #111;
+  margin: 8px 0;
+}
+
+.descripcion {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+  max-width: 700px;
+}
+
+.meta {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.tarjeta {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+  background: #fff;
+}
+
+.tarjeta:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tarjetaHeader {
+  padding: 16px 16px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.tarjetaTitulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+}
+
+.badgeEstado {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  text-transform: capitalize;
+}
+
+.badgePublicado {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.badgeBorrador {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.tarjetaBody {
+  padding: 8px 16px 16px;
+}
+
+.tarjetaMeta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.tarjetaDesc {
+  font-size: 12px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.tarjetaDesc p {
+  margin: 0 0 8px;
+}
+
+.tarjetaDesc ul {
+  margin: 0 0 8px;
+  padding-left: 16px;
+}
+
+.verProyecto {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 7px 11px;
+  background: #eff6ff;
+  color: #4361ee;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  transition: 0.15s;
+}
+
+.verProyecto:hover {
+  background: #dbeafe;
+}
+
+.empty {
+  font-size: 12px;
+  color: #888;
+}
+
+.volver {
+  margin-top: 22px;
+}
+
+.volverLink {
+  font-size: 13px;
+  color: #4361ee;
+  text-decoration: none;
+}
+
+.estado {
+  font-size: 12px;
+  color: #777;
+}

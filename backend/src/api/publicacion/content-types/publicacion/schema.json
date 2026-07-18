@@ -17,6 +17,9 @@
     "descripcion": {
       "type": "richtext"
     },
+    "imagen": {
+      "type": "string"
+    },
     "estado": {
       "type": "enumeration",
       "enum": [
