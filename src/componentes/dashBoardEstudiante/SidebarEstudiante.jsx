@@ -34,11 +34,7 @@ export default function SidebarEstudiante({ vistaActiva = 'dashboard', onNuevaPu
             <LayoutGrid size={16} color={vistaActiva === 'dashboard' ? '#4361ee' : '#666'} />
             <span>Mi portafolio</span>
           </button>
-          <button
-            className={`${estilos.itemMenu} ${vistaActiva === 'portafolio' ? estilos.itemActivo : ''}`}
-            onClick={() => navegar('/portafolio')}
-          >
-          </button>
+
           <button className={estilos.itemMenu}>
             <Video size={16} />
             <span>Tutoriales</span>

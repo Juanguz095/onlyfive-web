@@ -4,6 +4,25 @@ import estilos from './FormularioNuevaPublicacion.module.css'
 const CICLOS = ['CICLO I', 'CICLO II', 'CICLO III', 'CICLO IV', 'CICLO V', 'CICLO VI']
 const TIPOS = ['PROYECTOS', 'TALLERES', 'EVENTOS']
 const ESTADOS = ['borrador', 'publicado']
+const TALLERES = [
+  'Sin asignar',
+  'Cocina Básica I',
+  'Cocina Básica II',
+  'Cocina Creativa I',
+  'Cocina Creativa II',
+  'Repostería Avanzada',
+  'Pastelería Profesional',
+  'Técnicas Culinarias',
+  'Gestión de Cocina',
+]
+const DOCENTES = [
+  'Sin asignar',
+  'Prof. Carlos Mendoza',
+  'Prof. Lucía Huamán',
+  'Prof. Ricardo Torres',
+  'Prof. María Fernández',
+  'Prof. Diego Paredes',
+]
 
 export default function FormularioNuevaPublicacion({
   modo = 'crear',
@@ -20,6 +39,8 @@ export default function FormularioNuevaPublicacion({
   const [ciclo, setCiclo] = useState('CICLO I')
   const [tipo, setTipo] = useState('PROYECTOS')
   const [estado, setEstado] = useState('borrador')
+  const [taller, setTaller] = useState('Sin asignar')
+  const [docente, setDocente] = useState('Sin asignar')
   const [fechaPublicacion, setFechaPublicacion] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
@@ -32,6 +53,8 @@ export default function FormularioNuevaPublicacion({
       setCiclo('CICLO I')
       setTipo('PROYECTOS')
       setEstado('borrador')
+      setTaller('Sin asignar')
+      setDocente('Sin asignar')
       setFechaPublicacion('')
       return
     }
@@ -42,6 +65,8 @@ export default function FormularioNuevaPublicacion({
     setCiclo(CICLOS.includes(publicacionInicial.ciclo) ? publicacionInicial.ciclo : 'CICLO I')
     setTipo(TIPOS.includes(publicacionInicial.tipo) ? publicacionInicial.tipo : 'PROYECTOS')
     setEstado(ESTADOS.includes(publicacionInicial.estado) ? publicacionInicial.estado : 'borrador')
+    setTaller(TALLERES.includes(publicacionInicial.taller) ? publicacionInicial.taller : 'Sin asignar')
+    setDocente(DOCENTES.includes(publicacionInicial.docente) ? publicacionInicial.docente : 'Sin asignar')
     setFechaPublicacion(publicacionInicial.fecha_publicacion || '')
   }, [esEdicion, publicacionInicial])
 
@@ -79,6 +104,8 @@ export default function FormularioNuevaPublicacion({
         categoria: categoria.trim(),
         ciclo,
         tipo,
+        taller: taller === 'Sin asignar' ? '' : taller,
+        docente: docente === 'Sin asignar' ? '' : docente,
         estado,
         fecha_publicacion: fechaDefinitiva,
       },
@@ -114,6 +141,8 @@ export default function FormularioNuevaPublicacion({
         setCiclo('CICLO I')
         setTipo('PROYECTOS')
         setEstado('borrador')
+        setTaller('Sin asignar')
+        setDocente('Sin asignar')
         setFechaPublicacion('')
       }
     } catch (errorPeticion) {
@@ -185,6 +214,24 @@ export default function FormularioNuevaPublicacion({
             <span>Estado</span>
             <select className={estilos.campo} value={estado} onChange={(evento) => setEstado(evento.target.value)}>
               {ESTADOS.map((valor) => (
+                <option key={valor} value={valor}>{valor}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className={estilos.grupoCampo}>
+            <span>Taller</span>
+            <select className={estilos.campo} value={taller} onChange={(evento) => setTaller(evento.target.value)}>
+              {TALLERES.map((valor) => (
+                <option key={valor} value={valor}>{valor}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className={estilos.grupoCampo}>
+            <span>Docente</span>
+            <select className={estilos.campo} value={docente} onChange={(evento) => setDocente(evento.target.value)}>
+              {DOCENTES.map((valor) => (
                 <option key={valor} value={valor}>{valor}</option>
               ))}
             </select>
