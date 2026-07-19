@@ -34,9 +34,13 @@ export default function RutaProtegida() {
         }
 
         if (activo) setEstadoAcceso(ESTADO.AUTORIZADO)
-      } catch {
-        localStorage.removeItem('jwt')
-        if (activo) setEstadoAcceso(ESTADO.BLOQUEADO)
+      } catch (err) {
+        if (err.message === 'Token invalido o expirado') {
+          localStorage.removeItem('jwt')
+          if (activo) setEstadoAcceso(ESTADO.BLOQUEADO)
+        } else {
+          if (activo) setEstadoAcceso(ESTADO.AUTORIZADO)
+        }
       }
     }
 

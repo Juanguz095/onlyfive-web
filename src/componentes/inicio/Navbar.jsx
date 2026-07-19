@@ -40,8 +40,7 @@ export default function Navbar() {
 
         const datosUsuario = await respuesta.json()
         if (activo) setUsuario(datosUsuario)
-      } catch {
-        localStorage.removeItem('jwt')
+      } catch (err) {
         if (activo) setUsuario(null)
       }
     }
